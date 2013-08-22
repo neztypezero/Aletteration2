@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RnO-1e-Wsg">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
+    </dependencies>
+    <scenes>
+        <!--Nez Photo Picker Navigation Controller - Albums-->
+        <scene sceneID="nvT-bk-Flz">
+            <objects>
+                <navigationController storyboardIdentifier="NezPhotoPicker" definesPresentationContext="YES" id="RnO-1e-Wsg" customClass="NezPhotoPickerNavigationController" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Albums" id="Lrv-MC-Z48"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="blackTranslucent" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="fKo-w6-7LB">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="nRx-5U-ziM" kind="relationship" relationship="rootViewController" id="vHf-Bm-GO2"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qt5-Fw-LNa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="86" y="-429"/>
+        </scene>
+        <!--Nez Photo Picker Group View Controller - Photos-->
+        <scene sceneID="daG-5V-GBo">
+            <objects>
+                <tableViewController id="nRx-5U-ziM" customClass="NezPhotoPickerGroupViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="56" sectionHeaderHeight="22" sectionFooterHeight="22" id="ema-aX-2Cd">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="PlaceHolder" rowHeight="24" id="naN-HL-jOk">
+                                <rect key="frame" x="0.0" y="22" width="320" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="23"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PhotoPickerCell" id="RjM-t4-8ea" customClass="NezPhotoPickerGroupCell">
+                                <rect key="frame" x="0.0" y="46" width="320" height="56"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="55"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yD0-EU-sXG">
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="55" type="user" id="LF2-w4-vqd"/>
+                                                <constraint firstAttribute="height" constant="55" type="user" id="vyP-ua-zHG"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pkg-SL-FcM">
+                                            <attributedString key="attributedText">
+                                                <fragment content="Group Name ">
+                                                    <attributes>
+                                                        <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <font key="NSFont" size="17" name="Helvetica-Bold"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="(1234)">
+                                                    <attributes>
+                                                        <color key="NSColor" name="windowFrameColor" catalog="System" colorSpace="catalog"/>
+                                                        <font key="NSFont" size="17" name="Helvetica-Bold"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="Pkg-SL-FcM" firstAttribute="centerY" secondItem="yD0-EU-sXG" secondAttribute="centerY" type="default" id="5e4-q5-6yp"/>
+                                    <constraint firstAttribute="trailing" secondItem="Pkg-SL-FcM" secondAttribute="trailing" constant="20" type="default" id="Dha-7X-026"/>
+                                    <constraint firstItem="Pkg-SL-FcM" firstAttribute="leading" secondItem="yD0-EU-sXG" secondAttribute="trailing" constant="10" type="user" id="hkm-Qu-Vos"/>
+                                    <constraint firstItem="yD0-EU-sXG" firstAttribute="top" secondItem="RjM-t4-8ea" secondAttribute="top" type="default" id="rUf-tV-FnK"/>
+                                    <constraint firstItem="yD0-EU-sXG" firstAttribute="leading" secondItem="RjM-t4-8ea" secondAttribute="leading" type="user" id="s73-qX-cYh"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="groupImageView" destination="yD0-EU-sXG" id="qAZ-bO-1ad"/>
+                                    <outlet property="groupLabel" destination="Pkg-SL-FcM" id="iou-xt-Acp"/>
+                                    <segue destination="GLR-m5-c52" kind="push" identifier="AssetGroupSegue" id="DBV-Pt-47b"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="nRx-5U-ziM" id="d3P-iI-wma"/>
+                            <outlet property="delegate" destination="nRx-5U-ziM" id="T9i-DP-24S"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Photos" id="G5a-Ii-PON">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="5Ht-6i-RZ4">
+                            <connections>
+                                <action selector="cancelAction:" destination="nRx-5U-ziM" id="Ydw-D1-Iwu"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JWA-LT-U2e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="501" y="-429"/>
+        </scene>
+        <!--Nez Asset Collection View Controller - Camera Roll-->
+        <scene sceneID="hMB-Cf-tNX">
+            <objects>
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="GLR-m5-c52" customClass="NezAssetCollectionViewController" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="0p5-G5-mpz">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="6" minimumInteritemSpacing="6" id="QSO-wm-Zm6">
+                            <size key="itemSize" width="75" height="75"/>
+                            <size key="headerReferenceSize" width="50" height="50"/>
+                            <size key="footerReferenceSize" width="50" height="50"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCollectionCell" id="OPG-Mc-udz" customClass="NezAssetCollectionCell">
+                                <rect key="frame" x="0.0" y="50" width="75" height="75"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oc0-Pk-XeP"/>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="oc0-Pk-XeP" firstAttribute="top" secondItem="OPG-Mc-udz" secondAttribute="top" type="default" id="B6Y-cm-ERd"/>
+                                    <constraint firstItem="oc0-Pk-XeP" firstAttribute="bottom" secondItem="OPG-Mc-udz" secondAttribute="bottom" type="default" id="FDx-pD-osH"/>
+                                    <constraint firstItem="oc0-Pk-XeP" firstAttribute="trailing" secondItem="OPG-Mc-udz" secondAttribute="trailing" type="default" id="k9k-Nh-KHf"/>
+                                    <constraint firstItem="oc0-Pk-XeP" firstAttribute="leading" secondItem="OPG-Mc-udz" secondAttribute="leading" type="default" id="w1g-co-Bb4"/>
+                                </constraints>
+                                <size key="customSize" width="75" height="75"/>
+                                <connections>
+                                    <outlet property="assetImageView" destination="oc0-Pk-XeP" id="lxr-q5-J0w"/>
+                                    <segue destination="qDY-7Q-gAL" kind="push" identifier="ShowAssetSegue" id="r5P-ob-ply"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HeaderView" id="ps0-da-BIC">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </collectionReusableView>
+                        <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FooterView" id="vvY-RS-8l4" customClass="NezAssetCollectionFooterView">
+                            <rect key="frame" x="0.0" y="125" width="320" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="130 Photos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pX-7F-BCB">
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" name="windowFrameColor" catalog="System" colorSpace="catalog"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="9pX-7F-BCB" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="19t-af-SPd"/>
+                                <constraint firstItem="9pX-7F-BCB" firstAttribute="leading" secondItem="vvY-RS-8l4" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="UCM-HZ-NCW"/>
+                                <constraint firstItem="9pX-7F-BCB" firstAttribute="top" secondItem="vvY-RS-8l4" secondAttribute="top" constant="14" id="afK-hs-yGl"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="photoCountLabel" destination="9pX-7F-BCB" id="U2M-3M-TiF"/>
+                            </connections>
+                        </collectionReusableView>
+                        <connections>
+                            <outlet property="dataSource" destination="GLR-m5-c52" id="V1V-J4-r8M"/>
+                            <outlet property="delegate" destination="GLR-m5-c52" id="QMa-8e-D24"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="Camera Roll" id="YMl-0Z-Z5F">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="6YJ-0V-DuB">
+                            <connections>
+                                <action selector="cancelAction:" destination="GLR-m5-c52" id="zo2-ox-EJW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fT2-oH-2Iv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="931" y="-428"/>
+        </scene>
+        <!--Nez Crop Image View Controller-->
+        <scene sceneID="OJ0-pw-qSz">
+            <objects>
+                <viewController storyboardIdentifier="NezCropImageViewController" id="qDY-7Q-gAL" customClass="NezCropImageViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Oox-Xp-dgg">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="blackTranslucent" translatesAutoresizingMaskIntoConstraints="NO" id="eZu-UP-eqQ">
+                                <items>
+                                    <barButtonItem systemItem="cancel" id="Noe-Ys-jxc">
+                                        <connections>
+                                            <action selector="cancelAction:" destination="qDY-7Q-gAL" id="eTe-15-yvu"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="OLc-Td-2CI"/>
+                                    <barButtonItem title="Move and Scale" style="plain" id="yXp-Lz-9Mm" customClass="NezUIBarLabelItem"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="hQ1-Wc-7Wj"/>
+                                    <barButtonItem title="Choose" style="done" id="0zF-kC-2QS">
+                                        <connections>
+                                            <action selector="chooseAction:" destination="qDY-7Q-gAL" id="UuN-Bw-2yv"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zTu-23-lOp">
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="fGJ-xS-PDg">
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="6JN-hX-Ot4"/>
+                                            <constraint firstAttribute="height" constant="200" id="lzv-lz-f7J"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="fGJ-xS-PDg" firstAttribute="centerX" secondItem="zTu-23-lOp" secondAttribute="centerX" type="default" id="XUE-7r-KsQ"/>
+                                    <constraint firstItem="fGJ-xS-PDg" firstAttribute="centerY" secondItem="zTu-23-lOp" secondAttribute="centerY" type="default" id="aMB-bU-be4"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="yVR-k6-z3X" appends="YES" id="qnN-Yr-rnP"/>
+                                    <outletCollection property="gestureRecognizers" destination="usg-wo-YbV" appends="YES" id="zJt-54-V4P"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="zTu-23-lOp" firstAttribute="trailing" secondItem="Oox-Xp-dgg" secondAttribute="trailing" type="default" id="Bjj-3h-68E"/>
+                            <constraint firstItem="eZu-UP-eqQ" firstAttribute="trailing" secondItem="Oox-Xp-dgg" secondAttribute="trailing" type="default" id="JgW-Gt-hSb"/>
+                            <constraint firstItem="eZu-UP-eqQ" firstAttribute="leading" secondItem="Oox-Xp-dgg" secondAttribute="leading" type="default" id="KVh-tS-HYq"/>
+                            <constraint firstItem="zTu-23-lOp" firstAttribute="leading" secondItem="Oox-Xp-dgg" secondAttribute="leading" type="default" id="jKA-rA-yIs"/>
+                            <constraint firstItem="zTu-23-lOp" firstAttribute="top" secondItem="Oox-Xp-dgg" secondAttribute="top" type="default" id="jME-h9-8Ly"/>
+                            <constraint firstItem="eZu-UP-eqQ" firstAttribute="bottom" secondItem="Oox-Xp-dgg" secondAttribute="bottom" type="default" id="m7f-rP-pxF"/>
+                            <constraint firstItem="eZu-UP-eqQ" firstAttribute="top" secondItem="zTu-23-lOp" secondAttribute="bottom" type="default" id="nkl-Mj-Iyz"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="xUs-uT-DPV">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="e7L-YG-2xR"/>
+                    </navigationItem>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="assetImageView" destination="fGJ-xS-PDg" id="6ym-Dr-ylm"/>
+                        <outlet property="bottomToolbar" destination="eZu-UP-eqQ" id="rXm-VS-8cI"/>
+                        <outlet property="cropView" destination="zTu-23-lOp" id="ub0-1H-5Zo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6Sp-c9-vmi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer delaysTouchesBegan="YES" minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="yVR-k6-z3X">
+                    <connections>
+                        <action selector="panGestureMoveAround:" destination="qDY-7Q-gAL" id="zHq-Tz-r5f"/>
+                        <outlet property="delegate" destination="qDY-7Q-gAL" id="VtJ-fm-3AF"/>
+                    </connections>
+                </panGestureRecognizer>
+                <pinchGestureRecognizer delaysTouchesBegan="YES" id="usg-wo-YbV">
+                    <connections>
+                        <action selector="pinchGestureMoveAround:" destination="qDY-7Q-gAL" id="GOg-Ml-shF"/>
+                        <outlet property="delegate" destination="qDY-7Q-gAL" id="fjl-JH-TdZ"/>
+                    </connections>
+                </pinchGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1363" y="-428"/>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="NezAssetCollectionCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezAssetCollectionCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="assetImageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="NezAssetCollectionFooterView" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezAssetCollectionFooterView.h"/>
+            <relationships>
+                <relationship kind="outlet" name="photoCountLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="NezAssetCollectionViewController" superclassName="UICollectionViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezAssetCollectionViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelAction:"/>
+            </relationships>
+        </class>
+        <class className="NezCropImageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezCropImageViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="action" name="chooseAction:"/>
+                <relationship kind="action" name="panGestureMoveAround:" candidateClass="UIPanGestureRecognizer"/>
+                <relationship kind="action" name="pinchGestureMoveAround:" candidateClass="UIPinchGestureRecognizer"/>
+                <relationship kind="outlet" name="assetImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="bottomToolbar" candidateClass="UIToolbar"/>
+                <relationship kind="outlet" name="cropView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="NezPhotoPickerGroupCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezPhotoPickerGroupCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="groupImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="groupLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="NezPhotoPickerGroupViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezPhotoPickerGroupViewController.h"/>
+        </class>
+        <class className="NezPhotoPickerNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezPhotoPickerNavigationController.h"/>
+        </class>
+        <class className="NezUIBarLabelItem" superclassName="UIBarButtonItem">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NezUIBarLabelItem.h"/>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewController.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
