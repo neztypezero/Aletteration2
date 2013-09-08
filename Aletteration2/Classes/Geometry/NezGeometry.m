@@ -7,8 +7,6 @@
 //
 
 #import "NezGeometry.h"
-//#import "NezAnimation.h"
-//#import "NezAnimator.h"
 
 
 @interface NezGeometry(private)
@@ -148,7 +146,14 @@
 	return _boundingBox[1].z;
 }
 
--(BOOL)intersect:(NezRay*)ray withBoundingBox:(GLKVector3*)bb {
+/*
+ Taken from http://www.cs.utah.edu/~awilliam/box/box.pdf
+ 
+ An Efficient and Robust Ray–Box Intersection Algorithm
+ Amy Williams Steve Barrus R. Keith Morley Peter Shirley University of Utah
+*/
+
+-(BOOL)intersect:(NezRay*)ray withBoundingBox:(GLKVector3*)bb IntervalStart:(float)t0 IntervalEnd:(float)t1 {
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 	
 	tmin = (bb[ray.signX].x - ray.origin.x) * ray.inverseDirection.x;
@@ -169,20 +174,20 @@
 	if ( (tmin > tzmax) || (tzmin > tmax) ) {
 		return false;
 	}
-	return YES;
 
-// what is t0 and t1 for???
-//	if (tzmin > tmin)
-//		tmin = tzmin;
-//	if (tzmax < tmax)
-//		tmax = tzmax;
-//	return ( (tmin < t1) && (tmax > t0) );
+	if (tzmin > tmin) {
+		tmin = tzmin;
+	}
+	if (tzmax < tmax) {
+		tmax = tzmax;
+	}
+	return ((tmin < t1) && (tmax > t0));
 
 }
 
 -(BOOL)intersect:(NezRay*)ray {
 	[self setBoundingPoints];
-	return [self intersect:ray withBoundingBox:_boundingBox];
+	return [self intersect:ray withBoundingBox:_boundingBox IntervalStart:0.0 IntervalEnd:1.0];
 }
 
 -(BOOL)intersect:(NezRay*)ray withExtraSize:(float)size {
@@ -197,7 +202,7 @@
 		GLKVector3Make(_boundingBox[1].x+w, _boundingBox[1].y+h, _boundingBox[1].z+d)
 	};
 	
-	return [self intersect:ray withBoundingBox:bb];
+	return [self intersect:ray withBoundingBox:bb IntervalStart:0.0 IntervalEnd:1.0];
 }
 
 -(GLKVector3)getMidPoint {

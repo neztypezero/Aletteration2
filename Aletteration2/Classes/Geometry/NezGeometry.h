@@ -38,7 +38,6 @@
 -(float)getMix;
 
 -(GLKVector3)getMidPoint;
-//-(GLKVector2)getMidScreenPoint;
 -(GLKVector3)getSize;
 
 -(BOOL)containsPoint:(GLKVector4)point;
