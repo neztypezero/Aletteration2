@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-26.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezAletterationDisplayLine.h"
@@ -26,15 +26,21 @@
 		char letters[length];
 		_stringData = [NSMutableData dataWithBytesNoCopy:letters length:length freeWhenDone:NO];
 		_string = (char*)_stringData.bytes;
-		_string[0] = '\0';
-
-		_currentWordIndex = 0;
-		_currentWordLength = 0;
-		_currentJunkLength = 0;
-		_isHighlighted = NO;
-		_junkOffset = 0;
+		[self reset];
 	}
 	return self;
+}
+
+-(void)reset {
+	_string[0] = '\0';
+	
+	_currentWordIndex = 0;
+	_currentWordLength = 0;
+	_currentJunkLength = 0;
+	_isHighlighted = NO;
+	_junkOffset = 0;
+	
+	[_letterBlockList removeAllObjects];
 }
 
 -(GLKVector3)getNextLetterBlockPosition {

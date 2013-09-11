@@ -3,11 +3,11 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-11-04.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
-#import "NezGeometry.h"
+#import "NezVertexArrayGeometry.h"
 
-@interface NezAletterationBackground : NezGeometry
+@interface NezAletterationBackground : NezVertexArrayGeometry
 
 @end

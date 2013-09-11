@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-11-15.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezAletterationRetiredWord.h"

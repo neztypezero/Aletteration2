@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-22.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezSinglePlayerAletterationController.h"
@@ -23,6 +23,8 @@
 #import "NezAppDelegate.h"
 #import "NezAletterationPrefs.h"
 #import "NezAletterationScoreboard.h"
+#import "NezAletterationAnimationInitial.h"
+#import "NezAletterationAnimationReset.h"
 
 const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 
@@ -58,26 +60,6 @@ typedef enum NezAletterationCameraPositionEnum {
 	return GLKVector3Make(0.0f, 1.0f, 0.0f);
 }
 
--(GLKVector3)getBoxEndPos {
-	NezAletterationBox *box = [NezAletterationGameState getBox];
-	GLKVector3 boxSize = box.size;
-	GLKVector3 blockSize = [NezAletterationLetterBlock getBlockSize];
-	GLKVector3 endPos = {-boxSize.z, blockSize.y*8.0, 0.0};
-	return endPos;
-}
-
--(GLKMatrix4)getLidRotationMatrix {
-	GLKMatrix4 matRotX = GLKMatrix4MakeXRotation(-M_PI);
-	GLKMatrix4 matRotZ = GLKMatrix4MakeZRotation(NEZ_ALETTERATION_LID_ROTATION);
-	return GLKMatrix4Multiply(matRotX, matRotZ);
-}
-
--(GLKMatrix4)getBoxRestMatrix {
-	GLKVector3 endPos = [self getBoxEndPos];
-	GLKMatrix4 matRotZ = GLKMatrix4MakeZRotation(-NEZ_ALETTERATION_LID_ROTATION);
-	return GLKMatrix4Multiply(GLKMatrix4MakeTranslation(endPos.x, endPos.y, endPos.z), matRotZ);
-}
-
 -(id)initWithCoder:(NSCoder *)aDecoder {
 	if ((self = [super initWithCoder:aDecoder])) {
 		_camera = [NezAletterationGameState getCamera];
@@ -97,50 +79,35 @@ typedef enum NezAletterationCameraPositionEnum {
 	[self.view addGestureRecognizer:dragBoardHorizontal];
 	
 	
-	NezAletterationPrefsObject *prefs = [NezAletterationGameState getPreferences];
+//	NezAletterationPrefsObject *prefs = [NezAletterationGameState getPreferences];
 	
-	if (prefs.stateObject != nil && prefs.stateObject.turn > 0) {
-		[self setupFromStateObject:prefs.stateObject];
-	} else {
-		[self startInitialAnimationWithStopBlock:^(NezAnimation *ani) {
-			[self animateStage2];
-			[self animateCameraToDefaultWithDuration:2.50 moveSelectedBlock:YES andStopBlock:nil];
+//	if (prefs.stateObject != nil && prefs.stateObject.turn > 0) {
+//		[self setupFromStateObject:prefs.stateObject];
+//	} else {
+		[NezAletterationAnimationInitial doAnimationFor:self WithStopBlock:^(NezAnimation *ani) {
+			[self startGame:nil];
 		}];
-	}
+//	}
 }
 
 -(void)setupFromStateObject:(NezAletterationGameStateObject*)stateObject {
 	NezAletterationBox *box = [NezAletterationGameState getBox];
 	for (char letter='a'; letter <= 'z'; letter++) {
-		NezAletterationBoxLetterPlaceHolder *placeHolder = [box getPlaceHolderForLetter:letter];
+		NezAletterationLetterGroup *letterGroup = [box getLetterGroupForLetter:letter];
 		NezAletterationLetterStack *stack = [NezAletterationGameState getLetterStackForLetter:letter];
 
-		for (NezAletterationLetterBlock *letterBlock in placeHolder.letterBlockList) {
+		for (NezAletterationLetterBlock *letterBlock in letterGroup.letterBlockList) {
 			[stack pushLetterBlock:letterBlock];
 		}
-		[placeHolder.letterBlockList removeAllObjects];
+		[letterGroup.letterBlockList removeAllObjects];
 	}
-	GLKVector3 endPos = [self getBoxEndPos];
-	[box dettachLid].modelMatrix = GLKMatrix4Multiply(GLKMatrix4MakeTranslation(endPos.x, endPos.y, endPos.z), [self getLidRotationMatrix]);
-	box.modelMatrix = [self getBoxRestMatrix];
+	GLKVector3 endPos = [NezAletterationAnimationInitial getBoxEndPos];
+	[box dettachLid].modelMatrix = GLKMatrix4Multiply(GLKMatrix4MakeTranslation(endPos.x, endPos.y, endPos.z), [NezAletterationAnimationInitial getLidRotationMatrix]);
+	box.modelMatrix = [NezAletterationAnimationInitial getBoxEndMatrix];
 	_cameraPosition = NezAletterationCameraPositionGameboard;
 	[_camera setEye:[self getCameraDefaultEye] Target:[self getCameraDefaultTarget] UpVector:[self getCameraDefaultUpVector]];
 	[NezAletterationGameState startGame:stateObject];
 	[self startNextTurnNoAnimation];
-}
-
--(void)startInitialAnimationWithStopBlock:(NezAnimationBlock)stopBlock {
-	GLKVector3 fromData[] = {
-		_camera.eye, _camera.target, _camera.upVector
-	};
-	GLKVector3 toData[] = {
-		GLKVector3Make(-5.0f, -10.0f, 5.0f), GLKVector3Make(0.0f, 0.0f, 0.0f), GLKVector3Make(0.0f, 0.0f, 1.0f)
-	};
-	NezAnimation *ani = [[NezAnimation alloc] initWithFromData:(float*)fromData ToData:(float*)toData DataLength:sizeof(GLKVector3)*3 Duration:1.0 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
-		float *data = ani->newData;
-		[_camera setEye:GLKVector3Make(data[0], data[1], data[2]) Target:GLKVector3Make(data[3], data[4], data[5]) UpVector:GLKVector3Make(data[6], data[7], data[8])];
-	} DidStopBlock:stopBlock];
-	[NezAnimator addAnimation:ani];
 }
 
 -(void)animateSelectedBlockToDefaultPosition {
@@ -285,160 +252,6 @@ typedef enum NezAletterationCameraPositionEnum {
 			return cam.eye.z;
 		}
 	}
-	
-//	GLKMatrix4 pM = _camera.projectionMatrix;
-//	CGSize size = _camera.viewport.size;
-//	
-//	float inset = 5.0;
-//	
-//	float screenX = (size.width-inset);
-//	float homogenizedX = (screenX*2.0/size.width)-1.0;
-//	
-//	float maxX = line.maxX;
-//	float zX = (pM.m00*maxX+pM.m32)/(homogenizedX);
-//	
-//	float screenY = (size.height-inset);
-//	float homogenizedY = (screenY*2.0/size.height)-1.0;
-//	
-//	float maxY = line.maxY;
-//	float zY = (pM.m11*maxY+pM.m32)/(homogenizedY);
-//
-//	NSLog(@"cam.eye.z:%f, zX:%f, zY:%f", cam.eye.z, zX, zY);
-//	if (zY > zX) {
-//		return zY;
-//	} else {
-//		return zX;
-//	}
-}
-
--(void)animateStage2 {
-	GLKVector3 blockSize = [NezAletterationLetterBlock getBlockSize];
-	NezAletterationBox *box = [NezAletterationGameState getBox];
-	NezAletterationLid *lid = [box dettachLid];
-	GLKVector3 boxSize = box.size;
-	GLKMatrix4 boxMatrix = box.modelMatrix;
-	GLKMatrix4 rot = GLKMatrix4MakeRotation(M_PI*0.2, 1.0, -1.0, -1.0);
-	rot.m30 = boxMatrix.m30 + boxSize.z;
-	rot.m31 = boxMatrix.m31 + boxSize.y*0.5;
-	rot.m32 = boxMatrix.m32 + boxSize.z*2.0f;
-	
-	float duration = 1.6;
-	NezAnimation *ani = [[NezAnimation alloc] initMat4WithFromData:boxMatrix ToData:rot Duration:duration*0.5 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
-		GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-		box.modelMatrix = *mat;
-	} DidStopBlock:^(NezAnimation *ani) {
-		self.currentAnimatingCount = 0;
-		for (char letter='a'; letter <= 'z'; letter++) {
-			NezAletterationBoxLetterPlaceHolder *placeHolder = [box getPlaceHolderForLetter:letter];
-			float distance = blockSize.y*(0.5+randomNumber()*0.5);
-			NezAnimation *ani = [[NezAnimation alloc] initFloatWithFromData:0.0 ToData:distance Duration:distance*0.5 EasingFunction:easeInCubic UpdateBlock:^(NezAnimation *ani) {
-				placeHolder.offset = GLKVector3Make(0.0, 0.0, ani->newData[0]);
-				[placeHolder updateMatrices:box.modelMatrix];
-			} DidStopBlock:^(NezAnimation *ani) {
-				[self animateLetterPush:placeHolder];
-				if (self.currentAnimatingCount == [NezAletterationGameState getTotalLetterCount]) {
-					GLKMatrix4 mat = [self getBoxRestMatrix];
-					NezAnimation *ani = [[NezAnimation alloc] initMat4WithFromData:box.modelMatrix ToData:mat Duration:duration*0.75 EasingFunction:easeOutCubic UpdateBlock:^(NezAnimation *ani) {
-						GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-						box.modelMatrix = *mat;
-					} DidStopBlock:nil];
-					[NezAnimator addAnimation:ani];
-				};
-			}];
-			ani->delay = randomNumber()*1.25;
-			[NezAnimator addAnimation:ani];
-		}
-	}];
-	[NezAnimator addAnimation:ani];
-
-	GLKMatrix4 lidMatrix = lid.modelMatrix;
-	GLKVector3 midPoint = [lid getMidPoint];
-	
-	NezCubicBezierAnimation *cbani = [[NezCubicBezierAnimation alloc] initFloatWithFromData:0.0 ToData:1.0 Duration:duration EasingFunction:easeLinear UpdateBlock:^(NezAnimation *ani) {
-		NezCubicBezierAnimation *cbani = (NezCubicBezierAnimation*)ani;
-		GLKMatrix4 mat = lid.modelMatrix;
-		GLKVector3 p = [cbani.bezier positionAt:ani->newData[0]];
-		mat.m30 = p.x;
-		mat.m31 = p.y;
-		mat.m32 = p.z;
-		lid.modelMatrix = mat;
-	} DidStopBlock:^(NezAnimation *ani) {
-	}];
-	GLKVector3 endPos = [self getBoxEndPos];
-	GLKVector3 P1 = {midPoint.x+(endPos.x-midPoint.x)*0.25, midPoint.y+(endPos.y-midPoint.y)*0.25, midPoint.z+(endPos.z-midPoint.z)*(-10.0)};
-	GLKVector3 P2 = {midPoint.x+(endPos.x-midPoint.x)*0.75, midPoint.y+(endPos.y-midPoint.y)*0.75, midPoint.z+(endPos.z-midPoint.z)*(-10.0)};
-	cbani.bezier = [[NezCubicBezier alloc] initWithControlPointsP0:midPoint P1:P1 P2:P2 P3:endPos];
-	[NezAnimator addAnimation:cbani];
-	
-	GLKMatrix4 matRotX = GLKMatrix4MakeXRotation(-M_PI/2.0);
-	GLKMatrix4 lidMidMatrix = matRotX;
-	
-	GLKMatrix4 lidRestMatrix = [self getLidRotationMatrix];
-	
-	NezAnimationBlock rotBlock = ^(NezAnimation *ani) {
-		GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-		GLKMatrix4 modelMatrix = lid.modelMatrix;
-		mat->m30 = modelMatrix.m30;
-		mat->m31 = modelMatrix.m31;
-		mat->m32 = modelMatrix.m32;
-		lid.modelMatrix = *mat;
-	};
-	NezAnimation *lidRotAni = [[NezAnimation alloc] initMat4WithFromData:lidMatrix ToData:lidMidMatrix Duration:duration*0.25 EasingFunction:easeInCubic UpdateBlock:rotBlock DidStopBlock:nil];
-	lidRotAni->delay = duration*0.15;
-	lidRotAni.chainLink = [[NezAnimation alloc] initMat4WithFromData:lidMidMatrix ToData:lidRestMatrix Duration:duration*0.6 EasingFunction:easeOutCubic UpdateBlock:rotBlock DidStopBlock:nil];
-	[NezAnimator addAnimation:lidRotAni];
-}
-
--(void)animateLetterPush:(NezAletterationBoxLetterPlaceHolder*)placeHolder {
-	GLKVector3 dimensions = [NezAletterationLetterBlock getBlockSize];
-	float delay = 0.0;
-	float duration = 0.3;
-	NSMutableArray *letterBlockList = [placeHolder getLetterBlockList];
-	for (NezAletterationLetterBlock *letterBlock in letterBlockList) {
-		self.currentAnimatingCount++;
-		
-		NezAletterationLetterStack *stack = [NezAletterationGameState getLetterStackForLetter:letterBlock.letter];
-
-		GLKMatrix4 mat = GLKMatrix4Multiply(letterBlock.modelMatrix, GLKMatrix4MakeTranslation(0.0, -dimensions.y*1.5, 0.0));
-		NezAnimation *ani = [[NezAnimation alloc] initMat4WithFromData:letterBlock.modelMatrix ToData:mat Duration:duration EasingFunction:easeLinear UpdateBlock:^(NezAnimation *ani) {
-			GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-			letterBlock.modelMatrix = *mat;
-		} DidStopBlock:^(NezAnimation *ani) {
-			GLKVector3 endPos = [stack getNextLetterBlockPosition];
-			GLKVector3 midPoint = [letterBlock getMidPoint];
-			GLKMatrix4 curveMat = GLKMatrix4MakeTranslation(endPos.x, endPos.y, endPos.z);
-
-			[stack deferredPushLetterBlock:letterBlock];
-
-			GLKVector3 P1 = {midPoint.x+(endPos.x-midPoint.x)*0.25, midPoint.y+(endPos.y-midPoint.y)*0.25, midPoint.z+(endPos.z-midPoint.z)*(-0.25)};
-			GLKVector3 P2 = {midPoint.x+(endPos.x-midPoint.x)*0.75, midPoint.y+(endPos.y-midPoint.y)*0.75, midPoint.z+(endPos.z-midPoint.z)*(0.75)};
-			NezCubicBezier *bezier = [[NezCubicBezier alloc] initWithControlPointsP0:midPoint P1:P1 P2:P2 P3:endPos];
-			NezCubicBezierAnimation *curveAni = [[NezCubicBezierAnimation alloc] initMat4WithFromData:letterBlock.modelMatrix ToData:curveMat Duration:duration*5.0 EasingFunction:easeOutCubic UpdateBlock:^(NezAnimation *anim) {
-				NezCubicBezierAnimation *ani = (NezCubicBezierAnimation*)anim;
-				float t = (ani->elapsedTime/ani->duration);
-				GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-				GLKVector3 p = [ani.bezier positionAt:t];
-				mat->m30 = p.x;
-				mat->m31 = p.y;
-				mat->m32 = p.z;
-				letterBlock.modelMatrix = *mat;
-			} DidStopBlock:^(NezAnimation *ani) {
-				[stack finishPushLetterBlock:letterBlock];
-				self.currentAnimatingCount--;
-				if (self.currentAnimatingCount == 0) {
-					[self startGame:nil];
-				}
-			}];
-			curveAni.bezier = bezier;
-			[NezAnimator addAnimation:curveAni];
-		}];
-		ani->delay = delay;
-
-		[NezAnimator addAnimation:ani];
-		
-		delay += ani->duration*0.25;
-	}
-	[letterBlockList removeAllObjects];
 }
 
 -(IBAction)showScoringDialog:(id)sender {
@@ -518,75 +331,11 @@ typedef enum NezAletterationCameraPositionEnum {
 -(void)exitGame {
 	[self hidePopoverWithIdentifier:nil];
 	[self hideToolbar];
-	[self restackLetterBlocks];
-//	[self.navigationController popViewControllerAnimated:NO];
-}
-
--(void)restackLetterBlocks {
-	NSArray *letterBlockList = [NezAletterationGameState getLetterBlockList];
-	for (NezAletterationLetterBlock *letterBlock in letterBlockList) {
-		NezAletterationLetterStack *stack = [NezAletterationGameState getLetterStackForLetter:letterBlock.letter];
-		if (![stack containsLetterBlock:letterBlock]) {
-			GLKVector3 endPos = [stack getNextLetterBlockPosition];
-			GLKVector3 midPoint = [letterBlock getMidPoint];
-			GLKMatrix4 curveMat = GLKMatrix4MakeTranslation(endPos.x, endPos.y, endPos.z);
-			
-			[stack deferredPushLetterBlock:letterBlock];
-			
-			GLKVector3 P1 = {midPoint.x+(endPos.x-midPoint.x)*0.25, midPoint.y+(endPos.y-midPoint.y)*0.25, 6.0};
-			GLKVector3 P2 = {midPoint.x+(endPos.x-midPoint.x)*0.75, midPoint.y+(endPos.y-midPoint.y)*0.75, 6.0};
-			NezCubicBezier *bezier = [[NezCubicBezier alloc] initWithControlPointsP0:midPoint P1:P1 P2:P2 P3:endPos];
-			NezCubicBezierAnimation *curveAni = [[NezCubicBezierAnimation alloc] initMat4WithFromData:letterBlock.modelMatrix ToData:curveMat Duration:1.5 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *anim) {
-				NezCubicBezierAnimation *ani = (NezCubicBezierAnimation*)anim;
-				float t = (ani->elapsedTime/ani->duration);
-				GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-				GLKVector3 p = [ani.bezier positionAt:t];
-				mat->m30 = p.x;
-				mat->m31 = p.y;
-				mat->m32 = p.z;
-				letterBlock.modelMatrix = *mat;
-			} DidStopBlock:^(NezAnimation *ani) {
-				[stack finishPushLetterBlock:letterBlock];
-			}];
-			curveAni.bezier = bezier;
-			[NezAnimator addAnimation:curveAni];
-
-			NezAnimation *ani = [[NezAnimation alloc] initFloatWithFromData:letterBlock.mix ToData:0.0 Duration:1.0 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
-				letterBlock.mix = ani->newData[0];
-			} DidStopBlock:nil];
-			[NezAnimator addAnimation:ani];
-		}
-	}
-	NSArray *lineList = [NezAletterationGameState getDisplayLineList];
-	NezAletterationDisplayLine *displayLine = lineList.lastObject;
-	GLKVector4 color = displayLine.color1;
-	NezAnimation *ani = [[NezAnimation alloc] initFloatWithFromData:color.a ToData:0.0 Duration:1.0 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
-		GLKVector4 c = color;
-		c.a = ani->newData[0];
-		for (NezAletterationDisplayLine *displayLine in lineList) {
-			displayLine.color1 = c;
-		}
-	} DidStopBlock:nil];
-	[NezAnimator addAnimation:ani];
 	
-	for (NezAletterationLetterStack *stack in [NezAletterationGameState getLetterStacks]) {
-		[stack fadeCounterTo:0.0 withStopBlock:nil];
-	}
-	
-	NezAletterationBox *box = [NezAletterationGameState getBox];
-	GLKVector3 boxSize = box.size;
-	GLKMatrix4 boxMatrix = [NezAletterationGameState getOriginalBoxMatrix];
-	GLKMatrix4 rot = GLKMatrix4MakeRotation(M_PI*0.2, 1.0, -1.0, -1.0);
-	rot.m30 = boxMatrix.m30 + boxSize.z;
-	rot.m31 = boxMatrix.m31 + boxSize.y*0.5;
-	rot.m32 = boxMatrix.m32 + boxSize.z*2.0f;
-
-	ani = [[NezAnimation alloc] initMat4WithFromData:box.modelMatrix ToData:rot Duration:1.0 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
-		GLKMatrix4 *mat = (GLKMatrix4*)ani->newData;
-		box.modelMatrix = *mat;
-	} DidStopBlock:^(NezAnimation *ani) {
+	[NezAletterationAnimationReset doAnimationFor:self WithStopBlock:^(NezAnimation *ani) {
+		[self performSegueWithIdentifier:@"ResetGameSeque" sender:self];
+		[NezAletterationGameState reset];
 	}];
-	[NezAnimator addAnimation:ani];
 }
 
 -(void)showToolbar {

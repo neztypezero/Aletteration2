@@ -7,7 +7,7 @@
 //
 
 #import "NezAnimationEasingFunction.h"
-#import "NezGeometry.h"
+#import "NezVertexArrayGeometry.h"
 
 typedef enum LOOP_TYPES {
 	NEZ_ANI_NO_LOOP,

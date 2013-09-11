@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-11-06.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezRectangle2D.h"
@@ -20,6 +20,7 @@
 
 @property(nonatomic, setter = setLetter:) char letter;
 @property(nonatomic, readonly, getter = getCount) int count;
+@property(nonatomic, readonly, getter = getDeferredCount) int deferredCount;
 
 -(id)initWithVertexArray:(NezVertexArray *)vertexArray;
 

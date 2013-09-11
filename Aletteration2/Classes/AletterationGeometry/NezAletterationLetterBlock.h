@@ -6,12 +6,12 @@
 //  Copyright 2011 David Nesbitt. All rights reserved.
 //
 
-#import "NezGeometry.h"
+#import "NezVertexArrayGeometry.h"
 #import "NezVertexArray.h"
 
 #define LETTER_SQUARE_VERTEX_COUNT 4
 
-@interface NezAletterationLetterBlock : NezGeometry {
+@interface NezAletterationLetterBlock : NezVertexArrayGeometry {
 	Vertex letterSquareVertexList[LETTER_SQUARE_VERTEX_COUNT];
 }
 +(GLKVector3)getBlockSize;

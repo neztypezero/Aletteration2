@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-25.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezAletterationGameState.h"
@@ -213,6 +213,10 @@ static NezAletterationLetterCounter gLetterCounter;
 
 +(NezAletterationBox*)getBox {
 	return gBox;
+}
+
++(NezAletterationLid*)getLid {
+	return gLid;
 }
 
 +(NSArray*)getLetterStacks {
@@ -502,6 +506,13 @@ static NezAletterationLetterCounter gLetterCounter;
 
 #pragma mark -  Aletteration Game Functions
 
++(void)reset {
+	for (NezAletterationDisplayLine *displayLine in gDisplayLineList) {
+		[displayLine reset];
+	}
+	[gAletterationPreferences.stateObject reset];
+}
+
 +(void)setFirstTurn {
 	[gAletterationPreferences.stateObject reset];
 }
@@ -651,6 +662,14 @@ static NezAletterationLetterCounter gLetterCounter;
 		}];
 		
 	}
+}
+
++(int)getStackCurrentLetterCount {
+	int count = 0;
+	for(NezAletterationLetterStack *stack in gLetterStackList) {
+		count += stack.count-stack.deferredCount;
+	}
+	return count;
 }
 
 #pragma mark -  Preference get/set Functions

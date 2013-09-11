@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-25.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import <GLKit/GLKit.h>
@@ -15,6 +15,7 @@
 @class NezCamera;
 @class NezAletterationDisplayLine;
 @class NezAletterationBox;
+@class NezAletterationLid;
 @class NezAletterationLetterBlock;
 @class NezAletterationLetterStack;
 @class NezRay;
@@ -54,20 +55,23 @@ static inline double randomNumber() {
 
 +(NezCamera*)getCamera;
 +(NezAletterationBox*)getBox;
++(NezAletterationLid*)getLid;
 +(NSArray*)getLetterBlockList;
 +(NSArray*)getLetterStacks;
 +(NezAletterationLetterStack*)getLetterStackForLetter:(char)letter;
 +(NSArray*)getDisplayLineList;
-+(int)getTotalLetterCount;
 +(NezAletterationDisplayLine*)getDisplayIntersectingRay:(NezRay*)ray;
 +(NezAletterationScoreboard*)getScoreboard;
 
 #pragma mark -  Aletteration Game Functions
 
++(void)reset;
 +(void)startGame:(NezAletterationGameStateObject*)stateObject;
 +(NezAletterationLetterBlock*)startNextTurn:(BOOL)animated;
 +(void)endTurn:(int)lineIndex withBlock:(NezGCDBlock)endTurnBlock;
 +(void)retireWordForDisplayLine:(NezAletterationDisplayLine*)displayLine;
++(int)getTotalLetterCount;
++(int)getStackCurrentLetterCount;
 
 #pragma mark -  Preference get/set Functions
 

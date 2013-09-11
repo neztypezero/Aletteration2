@@ -6,13 +6,13 @@
 //  Copyright (c) 2011 David Nesbitt. All rights reserved.
 //
 
-#import "NezGeometry.h"
+#import "NezVertexArrayGeometry.h"
 
 
 #define NSR_INDEXED_LINE_INDEX_COUNT 6*3
 #define NSR_INDEXED_LINE_VERTEX_COUNT 4*3
 
-@interface NezStrectableRectangle2D : NezGeometry {
+@interface NezStrectableRectangle2D : NezVertexArrayGeometry {
 	Vertex vertexPtr[NSR_INDEXED_LINE_INDEX_COUNT];
 	
 	float rectWidth;

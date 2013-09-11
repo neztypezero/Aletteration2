@@ -3,8 +3,15 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-11-11.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
+
+/*
+ Taken from http://www.cs.utah.edu/~awilliam/box/box.pdf
+ 
+ An Efficient and Robust Ray–Box Intersection Algorithm
+ Amy Williams Steve Barrus R. Keith Morley Peter Shirley University of Utah
+ */
 
 #import <GLKit/GLKit.h>
 

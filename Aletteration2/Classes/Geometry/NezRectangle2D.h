@@ -6,13 +6,13 @@
 //  Copyright 2011 David Nesbitt. All rights reserved.
 //
 
-#import "NezGeometry.h"
+#import "NezVertexArrayGeometry.h"
 
 
 #define INDEXED_RECT_INDEX_COUNT 6
 #define INDEXED_RECT_VERTEX_COUNT 4
 
-@interface NezRectangle2D : NezGeometry {
+@interface NezRectangle2D : NezVertexArrayGeometry {
 	Vertex vertexPtr[INDEXED_RECT_VERTEX_COUNT];
 }
 

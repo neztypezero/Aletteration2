@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-19.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 const int NUM_PALETTES = NEZ_GLSL_MATRIX_PALETTE_COUNT;
 
@@ -37,9 +37,10 @@ varying vec3 v_ambientPlusSpecular;
 
 void main() {
 	int idx = int(a_indexArray[c_0]);
-	vec4 pos    = u_paletteMatrix[idx] * a_position;
+	vec4 pos = u_paletteMatrix[idx] * a_position;
 
-	vec3 N = normalize(a_normal * u_normalMatrix);
+	vec4 transformedNormal = u_paletteMatrix[idx]*vec4(a_normal, 0.0);
+	vec3 N = normalize(transformedNormal.xyz * u_normalMatrix);
 	vec3 L = normalize(u_lightPosition);
 	vec3 E = vec3(0, 0, 1);
 	vec3 H = normalize(L + E); //half plane (half vector)

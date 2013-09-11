@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-11-04.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezAletterationBox.h"
@@ -12,47 +12,8 @@
 #import "NezSimpleObjLoader.h"
 #import "NezAletterationGameState.h"
 
-@implementation NezAletterationBoxLetterPlaceHolder
-
--(id)init {
-	if ((self=[super init])) {
-		_letterBlockList = [NSMutableArray arrayWithCapacity:4];
-		_offset = GLKVector3Make(0.0, 0.0, 0.0);
-	}
-	return self;
-}
-
--(void)addLetterBlock:(NezAletterationLetterBlock*)letterBlock {
-	[_letterBlockList addObject:letterBlock];
-}
-
--(NSMutableArray*)getLetterBlockList {
-	return _letterBlockList;
-}
-
--(int)getCount {
-	return _letterBlockList.count;
-}
-
--(float)getSpaceUsed {
-	return _letterBlockList.count*[NezAletterationLetterBlock getBlockSize].z;
-}
-
--(void)updateMatrices:(GLKMatrix4)boxMatrix {
-	float blockDepth = [NezAletterationLetterBlock getBlockSize].z;
-	int i=0;
-	GLKMatrix4 standingRotation = GLKMatrix4MakeRotation(GLKMathDegreesToRadians(-90.0), 1.0, 0.0, 0.0);
-	for (NezAletterationLetterBlock *letterBlock in _letterBlockList) {
-		GLKMatrix4 modelMatrix = GLKMatrix4MakeTranslation(_position.x+_offset.x, _position.y+i*blockDepth+_offset.y, _position.z+_offset.z);
-		i++;
-		letterBlock.modelMatrix = GLKMatrix4Multiply(boxMatrix, GLKMatrix4Multiply(modelMatrix, standingRotation));
-	}
-}
-
-@end
-
 @interface NezAletterationBox () {
-	NSMutableArray *_placeHolderList;
+	NSMutableArray *_letterGroupList;
 }
 
 @property(nonatomic,strong) NezSimpleObjLoader *boxObj;
@@ -80,10 +41,17 @@
 -(id)initWithVertexArray:(NezVertexArray *)vertexArray modelMatrix:(GLKMatrix4)mat color:(GLKVector4)c {
 	self.boxObj = [[NezSimpleObjLoader alloc] initWithFile:@"box" Type:@"obj" Dir:@"Models"];
 	
+	//Model is slightly too small. Better to scale it in the 3d program but can't do it right now...
+	Vertex *v = [self getModelVertexList];
+	for (int i=0, n=[self getModelVertexCount]; i<n; i++) {
+		v[i].pos = GLKVector3MultiplyScalar(v[i].pos, 1.05);
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	if ((self = [super initWithVertexArray:vertexArray modelMatrix:mat color:c])) {
-		_placeHolderList = [NSMutableArray arrayWithCapacity:26];
+		_letterGroupList = [NSMutableArray arrayWithCapacity:26];
 		for (char letter='a'; letter <= 'z'; letter++) {
-			[_placeHolderList addObject:[[NezAletterationBoxLetterPlaceHolder alloc] init]];
+			[_letterGroupList addObject:[[NezAletterationLetterGroup alloc] initWithLetter:letter]];
 		}
 		self.boxObj = nil;
 		_lid = nil;
@@ -93,11 +61,22 @@
 
 -(void)updateAttachedObjectMatrices {
 	if (_lid) {
-		_lid.modelMatrix = GLKMatrix4TranslateWithVector3(self.modelMatrix, GLKVector3Make(0.0, 0.0, self.size.z-_lid.size.z+_lid.thickness));
+		_lid.modelMatrix = [self getMatrixForLid:_lid WithBoxMatrix:self.modelMatrix];
 	}
-	for (NezAletterationBoxLetterPlaceHolder *placeHolder in _placeHolderList) {
-		[placeHolder updateMatrices:self.modelMatrix];
+	for (NezAletterationLetterGroup *letterGroup in _letterGroupList) {
+		if (letterGroup.isAttached) {
+			letterGroup.modelMatrix = [self getMatrixForLetterGroup:letterGroup];
+		}
 	}
+}
+
+-(BOOL)areAllLetterGroupsAttached {
+	for (NezAletterationLetterGroup *letterGroup in _letterGroupList) {
+		if (!letterGroup.isAttached) {
+			return NO;
+		}
+	}
+	return YES;
 }
 
 -(void)attachLid:(NezAletterationLid*)lid {
@@ -109,6 +88,10 @@
 	NezAletterationLid *lid = _lid;
 	_lid = nil;
 	return lid;
+}
+
+-(GLKMatrix4)getMatrixForLid:(NezAletterationLid*)lid WithBoxMatrix:(GLKMatrix4)boxMatrix {
+	return GLKMatrix4TranslateWithVector3(boxMatrix, GLKVector3Make(0.0, 0.0, self.size.z-lid.size.z+lid.thickness));
 }
 
 -(void)translateWithDX:(float)dx DY:(float)dy DZ:(float)dz {
@@ -123,23 +106,28 @@
 
 -(void)addLetterBlockList:(NSArray*)letterBlockList {
 	for (NezAletterationLetterBlock *letterBlock in letterBlockList) {
-		NezAletterationBoxLetterPlaceHolder *placeHolder = [_placeHolderList objectAtIndex:letterBlock.letter-'a'];
-		[placeHolder addLetterBlock:letterBlock];
+		NezAletterationLetterGroup *letterGroup = [self getLetterGroupForLetter:letterBlock.letter];
+		[letterGroup addLetterBlock:letterBlock];
 	}
 	[self layoutLetterBlocks];
 }
 
--(NezAletterationBoxLetterPlaceHolder*)getPlaceHolderForLetter:(char)letter {
-	NezAletterationBoxLetterPlaceHolder *placeHolder = [_placeHolderList objectAtIndex:letter-'a'];
-	return placeHolder;
+-(NezAletterationLetterGroup*)getLetterGroupForLetter:(char)letter {
+	NezAletterationLetterGroup *letterGroup = [_letterGroupList objectAtIndex:letter-'a'];
+	return letterGroup;
 }
 
--(void)layoutX:(float)x Space:(float)totalSpace LetterPlaceHolderList:(NSArray*)letterPlaceHolderList {
+-(GLKMatrix4)getMatrixForLetterGroup:(NezAletterationLetterGroup*)letterGroup {
+	return GLKMatrix4Rotate(GLKMatrix4Translate(self.modelMatrix, letterGroup.offset.x, letterGroup.offset.y, letterGroup.offset.z), GLKMathDegreesToRadians(90.0), 1.0, 0.0, 0.0);
+}
+
+-(void)layoutX:(float)x Space:(float)totalSpace LetterGroupList:(NSArray*)letterGroupList {
 	float y = -totalSpace/2.0;
-	for (NezAletterationBoxLetterPlaceHolder *pHolder in letterPlaceHolderList) {
-		pHolder.position = GLKVector3Make(x, y, self.size.z/2.0);
-		y += pHolder.spaceUsed;
-		[pHolder updateMatrices:self.modelMatrix];
+	float z = self.size.z/2.0;
+	for (NezAletterationLetterGroup *letterGroup in letterGroupList) {
+		letterGroup.offset = GLKVector3Make(x, y, z);
+		letterGroup.modelMatrix = [self getMatrixForLetterGroup:letterGroup];
+		y += letterGroup.spaceUsed;
 	}
 }
 
@@ -149,18 +137,21 @@
 	float boxLength = size.y*0.85;
 	float totalSpace = 0.0;
 	float x = -blockSize.x*0.54;
-	NSMutableArray *letterPlaceHolderList = [NSMutableArray arrayWithCapacity:26];
-	for (NezAletterationBoxLetterPlaceHolder *placeHolder in _placeHolderList) {
-		if (totalSpace+placeHolder.spaceUsed > boxLength) {
-			[self layoutX:x Space:totalSpace LetterPlaceHolderList:letterPlaceHolderList];
+	NSMutableArray *letterGroupList = [NSMutableArray arrayWithCapacity:26];
+	for (NezAletterationLetterGroup *letterGroup in _letterGroupList) {
+		if (totalSpace+letterGroup.spaceUsed > boxLength) {
+			NSLog(@"%f, %f", totalSpace+letterGroup.spaceUsed, boxLength);
+			[self layoutX:x Space:totalSpace LetterGroupList:letterGroupList];
 			x = blockSize.x*0.54;
-			[letterPlaceHolderList removeAllObjects];
+			[letterGroupList removeAllObjects];
 			totalSpace = 0.0;
 		}
-		totalSpace += placeHolder.spaceUsed;
-		[letterPlaceHolderList addObject:placeHolder];
+		totalSpace += letterGroup.spaceUsed;
+		[letterGroupList addObject:letterGroup];
 	}
-	[self layoutX:x Space:totalSpace LetterPlaceHolderList:letterPlaceHolderList];
+	if(totalSpace > 0) {
+		[self layoutX:x Space:totalSpace LetterGroupList:letterGroupList];
+	}
 }
 
 @end

@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-26.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezRectangle2D.h"
@@ -37,6 +37,8 @@
 
 
 -(id)initWithVertexArray:(NezVertexArray*)vertexArray modelMatrix:(GLKMatrix4)mat color:(GLKVector4)c lineIndex:(int)lineIndex;
+
+-(void)reset;
 
 -(GLKVector3)getNextLetterBlockPosition;
 

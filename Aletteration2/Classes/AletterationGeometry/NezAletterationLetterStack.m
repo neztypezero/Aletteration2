@@ -3,7 +3,7 @@
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-11-06.
-//  Copyright (c) 2012 Nezsoft. All rights reserved.
+//  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
 #import "NezAletterationLetterStack.h"
@@ -95,7 +95,11 @@
 
 -(void)finishPushLetterBlock:(NezAletterationLetterBlock*)letterBlock {
 	_deferredBlockCount--;
-	[self setUV:[self getUV]];
+	[self changeCounter];
+}
+
+-(int)getDeferredCount {
+	return _deferredBlockCount;
 }
 
 -(NezAletterationLetterBlock*)popLetterBlock:(BOOL)isAnimated {
