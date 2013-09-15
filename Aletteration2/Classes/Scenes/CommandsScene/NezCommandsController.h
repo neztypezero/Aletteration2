@@ -26,4 +26,6 @@
 
 -(void)showDialog:(NSString*)segueID;
 
+-(IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue;
+
 @end

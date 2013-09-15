@@ -19,6 +19,7 @@
 #import "NezAletterationDisplayLine.h"
 #import "NezGCD.h"
 #import "NezAppDelegate.h"
+#import "NezGameCenter.h"
 
 @interface NezViewController () {
 	NezCamera *_camera;
@@ -70,8 +71,6 @@
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-//Enable anti aliasing if device is fast enough
-//	if (iDevice > iPhone4S | iPod Touch 4G) { view.drawableMultisample = GLKViewDrawableMultisample4X; }
 	
 	NezAletterationGameStateObject *stateObject = [NezAletterationGameState getPreferences].stateObject;
 	if (stateObject && stateObject.turn > 0) {
@@ -93,8 +92,23 @@
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 	self.pauseOnWillResignActive = YES;
-	self.resumeOnDidBecomeActive = NO;
+	self.resumeOnDidBecomeActive = YES;
 	self.paused = YES;
+
+	[[NezGameCenter sharedInstance] authenticateLocalUserWithHandler:^(UIViewController *viewController, NSError *error) {
+		GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+		if(viewController) {
+			//present the login view
+			[self presentViewController:viewController animated:animated completion:^{
+			}];
+		} else if (localPlayer.isAuthenticated) {
+			//Already authenticated. No need to log in.
+			NSLog(@"Already authenticated.");
+		} else {
+			// an error occurred
+			NSLog(@"%@", error);
+		}
+	}];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender {
@@ -114,21 +128,6 @@
     }
 	[NezAnimator removeAllAnimations];
 }
-
-//-(void)didReceiveMemoryWarning {
-//    [super didReceiveMemoryWarning];
-//
-//    if ([self isViewLoaded] && ([[self view] window] == nil)) {
-//        self.view = nil;
-//        
-//        [self tearDownGL];
-//        
-//        if ([EAGLContext currentContext] == self.context) {
-//            [EAGLContext setCurrentContext:nil];
-//        }
-//        self.context = nil;
-//    }
-//}
 
 -(void)setPaused:(BOOL)paused {
 	[super setPaused:paused];

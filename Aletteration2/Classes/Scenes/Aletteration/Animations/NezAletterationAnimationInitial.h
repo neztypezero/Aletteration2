@@ -8,7 +8,7 @@
 
 #import "NezAnimation.h"
 
-@class NezSinglePlayerAletterationController;
+@class NezAletterationSinglePlayerController;
 
 @interface NezAletterationAnimationInitial : NSObject {
 }
@@ -17,6 +17,6 @@
 +(GLKMatrix4)getBoxEndMatrix;
 +(GLKMatrix4)getLidRotationMatrix;
 
-+(void)doAnimationFor:(NezSinglePlayerAletterationController*)controller WithStopBlock:(NezAnimationBlock)stopBlock;
++(void)doAnimationFor:(NezAletterationSinglePlayerController*)controller WithStopBlock:(NezAnimationBlock)stopBlock;
 
 @end

@@ -31,10 +31,14 @@
 @property(nonatomic, readonly, getter = getCurrentWordLength) int currentWordLength;
 @property(nonatomic, readonly, getter = getCurrentJunkLength) int currentJunkLength;
 @property(nonatomic, readonly, getter = getCurrentWord) char *currentWord;
+@property(nonatomic, readonly) BOOL isHighlighted;
 @property(nonatomic) BOOL isWord;
+
+@property(nonatomic, readonly, getter = getLeftEdge) float leftEdge;
 
 @property(nonatomic, weak) NezStrectableRectangle2D *highlightRect;
 
++(float)defaultLineAlphaValue;
 
 -(id)initWithVertexArray:(NezVertexArray*)vertexArray modelMatrix:(GLKMatrix4)mat color:(GLKVector4)c lineIndex:(int)lineIndex;
 
@@ -49,5 +53,8 @@
 -(void)setLetterBlockColors:(BOOL)animated;
 
 -(NezAletterationRetiredWord*)retireHighlightedWord;
+
+-(void)fadeInHighlight;
+-(void)fadeOutHighlight;
 
 @end

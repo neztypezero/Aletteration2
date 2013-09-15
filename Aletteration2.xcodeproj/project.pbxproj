@@ -11,6 +11,9 @@
 		630FFC2F163B6EC300000826 /* NezPlayerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FFC2E163B6EC300000826 /* NezPlayerCollectionViewCell.m */; };
 		630FFC32163B739800000826 /* NezPlayerCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FFC31163B739800000826 /* NezPlayerCollectionController.m */; };
 		630FFC35163B980200000826 /* NezOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FFC34163B980200000826 /* NezOptionsController.m */; };
+		631717C617E37951005ABCA8 /* NezGameCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 631717C517E37951005ABCA8 /* NezGameCenter.m */; };
+		631717C817E386B6005ABCA8 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631717C717E386B6005ABCA8 /* GameKit.framework */; };
+		631717CC17E410E8005ABCA8 /* NezAletterationMultiPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 631717CB17E410E8005ABCA8 /* NezAletterationMultiPlayerController.m */; };
 		631B0940163255370086EA75 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631B093F163255370086EA75 /* UIKit.framework */; };
 		631B0942163255370086EA75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631B0941163255370086EA75 /* Foundation.framework */; };
 		631B0944163255370086EA75 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631B0943163255370086EA75 /* CoreGraphics.framework */; };
@@ -41,7 +44,7 @@
 		634973861636749400FAD3B8 /* NezUIShadowedRoundRect9.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973471636749400FAD3B8 /* NezUIShadowedRoundRect9.m */; };
 		634973871636749400FAD3B8 /* NezUIShadowedRoundRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973491636749400FAD3B8 /* NezUIShadowedRoundRectView.m */; };
 		634973881636749400FAD3B8 /* NezAletterationPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349734E1636749400FAD3B8 /* NezAletterationPrefs.m */; };
-		634973891636749400FAD3B8 /* NezSinglePlayerAletterationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973511636749400FAD3B8 /* NezSinglePlayerAletterationController.m */; };
+		634973891636749400FAD3B8 /* NezAletterationSinglePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973511636749400FAD3B8 /* NezAletterationSinglePlayerController.m */; };
 		6349738A1636749400FAD3B8 /* NezCommandsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973541636749400FAD3B8 /* NezCommandsController.m */; };
 		6349738B1636749400FAD3B8 /* NezNothingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973561636749400FAD3B8 /* NezNothingController.m */; };
 		6349738C1636749400FAD3B8 /* NezCreditsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634973591636749400FAD3B8 /* NezCreditsController.m */; };
@@ -77,6 +80,7 @@
 		63659207163F7AE4004E75D6 /* NezCropImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63659206163F7AE3004E75D6 /* NezCropImageViewController.m */; };
 		6365920A163F8282004E75D6 /* NezCropRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63659209163F8282004E75D6 /* NezCropRectView.m */; };
 		6365F6AC17D14CAD00D26880 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6365F6AB17D14CAD00D26880 /* Images.xcassets */; };
+		636E2F2817E2430B003B3CBA /* NezAletterationAnimationUndo.m in Sources */ = {isa = PBXBuildFile; fileRef = 636E2F2717E2430B003B3CBA /* NezAletterationAnimationUndo.m */; };
 		63783CB71655BE2000565A6F /* NezAletterationBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 63783CA81655BE2000565A6F /* NezAletterationBackground.m */; };
 		63783CB81655BE2000565A6F /* NezAletterationBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 63783CAA1655BE2000565A6F /* NezAletterationBox.m */; };
 		63783CB91655BE2000565A6F /* NezAletterationDisplayLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 63783CAC1655BE2000565A6F /* NezAletterationDisplayLine.m */; };
@@ -85,6 +89,7 @@
 		63783CBC1655BE2000565A6F /* NezAletterationLid.m in Sources */ = {isa = PBXBuildFile; fileRef = 63783CB21655BE2000565A6F /* NezAletterationLid.m */; };
 		63783CBD1655BE2000565A6F /* NezAletterationRaysRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 63783CB41655BE2000565A6F /* NezAletterationRaysRectangle.m */; };
 		63783CBE1655BE2000565A6F /* NezAletterationRetiredWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 63783CB61655BE2000565A6F /* NezAletterationRetiredWord.m */; };
+		63805DE117E5071A001CA5FA /* NezAletterationNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63805DE017E5071A001CA5FA /* NezAletterationNavigationController.m */; };
 		638467E116412F4A00C1C504 /* NezPhotoPickerNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638467E016412F4A00C1C504 /* NezPhotoPickerNavigationController.m */; };
 		63868422163CF18A00039AD0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63868421163CF18A00039AD0 /* AVFoundation.framework */; };
 		63868425163CF27400039AD0 /* NezOpenALPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63868424163CF27400039AD0 /* NezOpenALPlayer.m */; };
@@ -192,6 +197,11 @@
 		630FFC31163B739800000826 /* NezPlayerCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezPlayerCollectionController.m; sourceTree = "<group>"; };
 		630FFC33163B980200000826 /* NezOptionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezOptionsController.h; sourceTree = "<group>"; };
 		630FFC34163B980200000826 /* NezOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezOptionsController.m; sourceTree = "<group>"; };
+		631717C417E37951005ABCA8 /* NezGameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NezGameCenter.h; path = GameCenter/NezGameCenter.h; sourceTree = "<group>"; };
+		631717C517E37951005ABCA8 /* NezGameCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NezGameCenter.m; path = GameCenter/NezGameCenter.m; sourceTree = "<group>"; };
+		631717C717E386B6005ABCA8 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		631717CA17E410E8005ABCA8 /* NezAletterationMultiPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NezAletterationMultiPlayerController.h; path = MultiPlayer/NezAletterationMultiPlayerController.h; sourceTree = "<group>"; };
+		631717CB17E410E8005ABCA8 /* NezAletterationMultiPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NezAletterationMultiPlayerController.m; path = MultiPlayer/NezAletterationMultiPlayerController.m; sourceTree = "<group>"; };
 		631B093B163255370086EA75 /* Aletteration2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aletteration2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		631B093F163255370086EA75 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		631B0941163255370086EA75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -239,8 +249,8 @@
 		634973491636749400FAD3B8 /* NezUIShadowedRoundRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezUIShadowedRoundRectView.m; sourceTree = "<group>"; };
 		6349734D1636749400FAD3B8 /* NezAletterationPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezAletterationPrefs.h; sourceTree = "<group>"; };
 		6349734E1636749400FAD3B8 /* NezAletterationPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezAletterationPrefs.m; sourceTree = "<group>"; };
-		634973501636749400FAD3B8 /* NezSinglePlayerAletterationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezSinglePlayerAletterationController.h; sourceTree = "<group>"; };
-		634973511636749400FAD3B8 /* NezSinglePlayerAletterationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezSinglePlayerAletterationController.m; sourceTree = "<group>"; };
+		634973501636749400FAD3B8 /* NezAletterationSinglePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezAletterationSinglePlayerController.h; sourceTree = "<group>"; };
+		634973511636749400FAD3B8 /* NezAletterationSinglePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezAletterationSinglePlayerController.m; sourceTree = "<group>"; };
 		634973531636749400FAD3B8 /* NezCommandsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezCommandsController.h; sourceTree = "<group>"; };
 		634973541636749400FAD3B8 /* NezCommandsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezCommandsController.m; sourceTree = "<group>"; };
 		634973551636749400FAD3B8 /* NezNothingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezNothingController.h; sourceTree = "<group>"; };
@@ -305,6 +315,8 @@
 		63659208163F8282004E75D6 /* NezCropRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezCropRectView.h; sourceTree = "<group>"; };
 		63659209163F8282004E75D6 /* NezCropRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezCropRectView.m; sourceTree = "<group>"; };
 		6365F6AB17D14CAD00D26880 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		636E2F2617E2430B003B3CBA /* NezAletterationAnimationUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NezAletterationAnimationUndo.h; path = Animations/NezAletterationAnimationUndo.h; sourceTree = "<group>"; };
+		636E2F2717E2430B003B3CBA /* NezAletterationAnimationUndo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NezAletterationAnimationUndo.m; path = Animations/NezAletterationAnimationUndo.m; sourceTree = "<group>"; };
 		63783CA71655BE2000565A6F /* NezAletterationBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = NezAletterationBackground.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		63783CA81655BE2000565A6F /* NezAletterationBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NezAletterationBackground.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		63783CA91655BE2000565A6F /* NezAletterationBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = NezAletterationBox.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -321,6 +333,8 @@
 		63783CB41655BE2000565A6F /* NezAletterationRaysRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezAletterationRaysRectangle.m; sourceTree = "<group>"; };
 		63783CB51655BE2000565A6F /* NezAletterationRetiredWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NezAletterationRetiredWord.h; sourceTree = "<group>"; };
 		63783CB61655BE2000565A6F /* NezAletterationRetiredWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NezAletterationRetiredWord.m; sourceTree = "<group>"; };
+		63805DDF17E5071A001CA5FA /* NezAletterationNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NezAletterationNavigationController.h; path = Controllers/NezAletterationNavigationController.h; sourceTree = "<group>"; };
+		63805DE017E5071A001CA5FA /* NezAletterationNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NezAletterationNavigationController.m; path = Controllers/NezAletterationNavigationController.m; sourceTree = "<group>"; };
 		638467DF16412F4A00C1C504 /* NezPhotoPickerNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NezPhotoPickerNavigationController.h; path = PhotoPicker/NezPhotoPickerNavigationController.h; sourceTree = "<group>"; };
 		638467E016412F4A00C1C504 /* NezPhotoPickerNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NezPhotoPickerNavigationController.m; path = PhotoPicker/NezPhotoPickerNavigationController.m; sourceTree = "<group>"; };
 		63868421163CF18A00039AD0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -442,6 +456,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				631717C817E386B6005ABCA8 /* GameKit.framework in Frameworks */,
 				63868422163CF18A00039AD0 /* AVFoundation.framework in Frameworks */,
 				63A75C0B163F01FA00BC374A /* AssetsLibrary.framework in Frameworks */,
 				63399EDD163D0B4200C0E944 /* MobileCoreServices.framework in Frameworks */,
@@ -460,6 +475,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		631717C317E378FB005ABCA8 /* GameCenter */ = {
+			isa = PBXGroup;
+			children = (
+				631717C417E37951005ABCA8 /* NezGameCenter.h */,
+				631717C517E37951005ABCA8 /* NezGameCenter.m */,
+			);
+			name = GameCenter;
+			sourceTree = "<group>";
+		};
+		631717C917E410C3005ABCA8 /* MultiPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				631717CA17E410E8005ABCA8 /* NezAletterationMultiPlayerController.h */,
+				631717CB17E410E8005ABCA8 /* NezAletterationMultiPlayerController.m */,
+			);
+			name = MultiPlayer;
+			sourceTree = "<group>";
+		};
 		631B0930163255370086EA75 = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +513,7 @@
 		631B093E163255370086EA75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				631717C717E386B6005ABCA8 /* GameKit.framework */,
 				63A75C0A163F01FA00BC374A /* AssetsLibrary.framework */,
 				63399EDC163D0B4200C0E944 /* MobileCoreServices.framework */,
 				63BECCA81633E10400D951AE /* libsqlite3.0.dylib */,
@@ -634,6 +668,11 @@
 		6349732D1636749400FAD3B8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6349733B1636749400FAD3B8 /* NezAppDelegate.h */,
+				6349733C1636749400FAD3B8 /* NezAppDelegate.m */,
+				6349733D1636749400FAD3B8 /* NezViewController.h */,
+				6349733E1636749400FAD3B8 /* NezViewController.m */,
+				631717C317E378FB005ABCA8 /* GameCenter */,
 				6387BD40163791F9007AF367 /* Animation */,
 				6349732E1636749400FAD3B8 /* CustomSegues */,
 				634973331636749400FAD3B8 /* EmbededControllers */,
@@ -643,10 +682,6 @@
 				634973B6163689A100FAD3B8 /* ModelLoaders */,
 				635D7A21163CABFF00EE4643 /* OpenAL */,
 				6349739A1636760C00FAD3B8 /* OpenGL */,
-				6349733B1636749400FAD3B8 /* NezAppDelegate.h */,
-				6349733C1636749400FAD3B8 /* NezAppDelegate.m */,
-				6349733D1636749400FAD3B8 /* NezViewController.h */,
-				6349733E1636749400FAD3B8 /* NezViewController.m */,
 				6349733F1636749400FAD3B8 /* RoundedRectViews */,
 				6349734A1636749400FAD3B8 /* Scenes */,
 				634973751636749400FAD3B8 /* SQLite */,
@@ -724,10 +759,12 @@
 		6349734B1636749400FAD3B8 /* Aletteration */ = {
 			isa = PBXGroup;
 			children = (
-				63A4619817DD782B00714205 /* Animations */,
+				63805DDD17E5068F001CA5FA /* Controllers */,
 				63930AA8163A48BC003FFB5A /* GameState */,
 				6349734C1636749400FAD3B8 /* Preferences */,
+				63A4619817DD782B00714205 /* Animations */,
 				6349734F1636749400FAD3B8 /* SinglePlayer */,
+				631717C917E410C3005ABCA8 /* MultiPlayer */,
 			);
 			path = Aletteration;
 			sourceTree = "<group>";
@@ -744,8 +781,8 @@
 		6349734F1636749400FAD3B8 /* SinglePlayer */ = {
 			isa = PBXGroup;
 			children = (
-				634973501636749400FAD3B8 /* NezSinglePlayerAletterationController.h */,
-				634973511636749400FAD3B8 /* NezSinglePlayerAletterationController.m */,
+				634973501636749400FAD3B8 /* NezAletterationSinglePlayerController.h */,
+				634973511636749400FAD3B8 /* NezAletterationSinglePlayerController.m */,
 				630FFC2D163B6EC300000826 /* NezPlayerCollectionViewCell.h */,
 				630FFC2E163B6EC300000826 /* NezPlayerCollectionViewCell.m */,
 				630FFC30163B739800000826 /* NezPlayerCollectionController.h */,
@@ -944,6 +981,15 @@
 			path = AletterationGeometry;
 			sourceTree = "<group>";
 		};
+		63805DDD17E5068F001CA5FA /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				63805DDF17E5071A001CA5FA /* NezAletterationNavigationController.h */,
+				63805DE017E5071A001CA5FA /* NezAletterationNavigationController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 		6387BD40163791F9007AF367 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
@@ -975,6 +1021,8 @@
 				63A4619A17DD787900714205 /* NezAletterationAnimationInitial.m */,
 				635C9C0D17DE58C9007BE9AF /* NezAletterationAnimationReset.h */,
 				635C9C0E17DE58C9007BE9AF /* NezAletterationAnimationReset.m */,
+				636E2F2617E2430B003B3CBA /* NezAletterationAnimationUndo.h */,
+				636E2F2717E2430B003B3CBA /* NezAletterationAnimationUndo.m */,
 			);
 			name = Animations;
 			sourceTree = "<group>";
@@ -1185,6 +1233,7 @@
 				6349737F1636749400FAD3B8 /* NezEmbededDialogController.m in Sources */,
 				634973801636749400FAD3B8 /* NezGCD.m in Sources */,
 				634973811636749400FAD3B8 /* NezAppDelegate.m in Sources */,
+				631717CC17E410E8005ABCA8 /* NezAletterationMultiPlayerController.m in Sources */,
 				634973821636749400FAD3B8 /* NezViewController.m in Sources */,
 				634973831636749400FAD3B8 /* NezRound16View.m in Sources */,
 				634973841636749400FAD3B8 /* NezRound9ImageView.m in Sources */,
@@ -1193,7 +1242,7 @@
 				634973871636749400FAD3B8 /* NezUIShadowedRoundRectView.m in Sources */,
 				63A4619717DD200400714205 /* NezAletterationLetterGroup.m in Sources */,
 				634973881636749400FAD3B8 /* NezAletterationPrefs.m in Sources */,
-				634973891636749400FAD3B8 /* NezSinglePlayerAletterationController.m in Sources */,
+				634973891636749400FAD3B8 /* NezAletterationSinglePlayerController.m in Sources */,
 				6349738A1636749400FAD3B8 /* NezCommandsController.m in Sources */,
 				6349738B1636749400FAD3B8 /* NezNothingController.m in Sources */,
 				6349738C1636749400FAD3B8 /* NezCreditsController.m in Sources */,
@@ -1210,10 +1259,12 @@
 				634973991636749400FAD3B8 /* NezSQLiteHighScores.m in Sources */,
 				6349739D1636760C00FAD3B8 /* NezGLSLProgram.m in Sources */,
 				634973B41636896000FAD3B8 /* NezVertexArray.m in Sources */,
+				63805DE117E5071A001CA5FA /* NezAletterationNavigationController.m in Sources */,
 				63A4619117DCDF6200714205 /* NezVertexArrayGeometry.m in Sources */,
 				634973BB163689A200FAD3B8 /* NezModelLoader.m in Sources */,
 				634973BC163689A200FAD3B8 /* NezSimpleObjLoader.m in Sources */,
 				6387BD43163791F9007AF367 /* NezAnimationEasingFunction.c in Sources */,
+				631717C617E37951005ABCA8 /* NezGameCenter.m in Sources */,
 				638E6019163912AC00637612 /* NezCubicBezier.m in Sources */,
 				638E6021163914AB00637612 /* NezCubicBezierAnimation.m in Sources */,
 				63930AAC163A48F5003FFB5A /* NezAletterationGameState.m in Sources */,
@@ -1243,6 +1294,7 @@
 				63783CBA1655BE2000565A6F /* NezAletterationLetterBlock.m in Sources */,
 				63783CBB1655BE2000565A6F /* NezAletterationLetterStack.m in Sources */,
 				63783CBC1655BE2000565A6F /* NezAletterationLid.m in Sources */,
+				636E2F2817E2430B003B3CBA /* NezAletterationAnimationUndo.m in Sources */,
 				63783CBD1655BE2000565A6F /* NezAletterationRaysRectangle.m in Sources */,
 				63783CBE1655BE2000565A6F /* NezAletterationRetiredWord.m in Sources */,
 				633164141656D1580078BDD1 /* NezAletterationScoreboard.m in Sources */,

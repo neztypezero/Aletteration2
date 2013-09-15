@@ -8,7 +8,7 @@
 
 #import "NezCommandsController.h"
 #import "NezEmbededController.h"
-#import "NezSinglePlayerAletterationController.h"
+#import "NezAletterationSinglePlayerController.h"
 #import "NezOptionsController.h"
 #import "NezAletterationGameState.h"
 #import <QuartzCore/QuartzCore.h>
@@ -107,6 +107,9 @@
 		controller.optionsPopoverController = popoverSegue.popoverController;
 		popoverSegue.popoverController.delegate = controller;
 	}
+}
+
+-(IBAction)unwindToThisViewController:(UIStoryboardSegue *)unwindSegue {
 }
 
 @end

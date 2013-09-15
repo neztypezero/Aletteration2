@@ -65,11 +65,14 @@ static inline double randomNumber() {
 
 #pragma mark -  Aletteration Game Functions
 
++(NezAletterationGameStateObject*)getCurrentGameStateObject;
 +(void)reset;
 +(void)startGame:(NezAletterationGameStateObject*)stateObject;
 +(NezAletterationLetterBlock*)startNextTurn:(BOOL)animated;
++(void)undoTurn;
++(void)undoTurnWithDoneBlock:(NezGCDBlock)stopBlock;
 +(void)endTurn:(int)lineIndex withBlock:(NezGCDBlock)endTurnBlock;
-+(void)retireWordForDisplayLine:(NezAletterationDisplayLine*)displayLine;
++(void)retireWordForDisplayLine:(NezAletterationDisplayLine*)displayLine withStopBlock:(NezGCDBlock)stopBlock;
 +(int)getTotalLetterCount;
 +(int)getStackCurrentLetterCount;
 

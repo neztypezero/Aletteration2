@@ -1,12 +1,12 @@
 //
-//  NezSinglePlayerAletterationController.m
+//  NezAletterationSinglePlayerController.m
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-22.
 //  Copyright (c) 2012 David Nesbitt. All rights reserved.
 //
 
-#import "NezSinglePlayerAletterationController.h"
+#import "NezAletterationSinglePlayerController.h"
 #import "NezOptionsController.h"
 #import "NezAletterationGameState.h"
 #import "NezCamera.h"
@@ -25,6 +25,7 @@
 #import "NezAletterationScoreboard.h"
 #import "NezAletterationAnimationInitial.h"
 #import "NezAletterationAnimationReset.h"
+#import "NezAletterationAnimationUndo.h"
 
 const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 
@@ -34,7 +35,7 @@ typedef enum NezAletterationCameraPositionEnum {
 	NezAletterationCameraPositionScoreboard
 } NezAletterationCameraPositionEnum;
 
-@interface NezSinglePlayerAletterationController () {
+@interface NezAletterationSinglePlayerController () {
 	UIPopoverController *_currentPopoverController;
 	NSString *_currentPopoverID;
 	NezCamera *_camera;
@@ -46,7 +47,7 @@ typedef enum NezAletterationCameraPositionEnum {
 
 @end
 
-@implementation NezSinglePlayerAletterationController
+@implementation NezAletterationSinglePlayerController
 
 -(GLKVector3)getCameraDefaultEye {
 	return GLKVector3Make(0.0f, 0.0f, [self getZoomForDisplayLine]);
@@ -65,6 +66,7 @@ typedef enum NezAletterationCameraPositionEnum {
 		_camera = [NezAletterationGameState getCamera];
 		_tapInsideSelectedBlock = NO;
 		_tapCloseToSelectedBlock = NO;
+		_acceptsInput = NO;
 	}
 	return self;
 }
@@ -78,6 +80,7 @@ typedef enum NezAletterationCameraPositionEnum {
 	dragBoardHorizontal.delegate = self;
 	[self.view addGestureRecognizer:dragBoardHorizontal];
 	
+	NSLog(@"acceptsInput:%@", self.acceptsInput?@"YES":@"NO");
 	
 //	NezAletterationPrefsObject *prefs = [NezAletterationGameState getPreferences];
 	
@@ -118,12 +121,14 @@ typedef enum NezAletterationCameraPositionEnum {
 			GLKMatrix4 *modelMatrix = (GLKMatrix4*)ani->newData;
 			self.selectedBlock.modelMatrix = *modelMatrix;
 		} DidStopBlock:^(NezAnimation *ani) {
+			self.acceptsInput = YES;
 		}];
 		[NezAnimator addAnimation:ani];
 	}
 }
 
 -(void)animateCameraToDefaultWithDuration:(float)duration moveSelectedBlock:(BOOL)moveBlock andStopBlock:(NezAnimationBlock)stopBlock {
+	self.acceptsInput = NO;
 	GLKVector3 fromData[] = {
 		_camera.eye, _camera.target, _camera.upVector
 	};
@@ -137,11 +142,17 @@ typedef enum NezAletterationCameraPositionEnum {
 		if (self.selectedBlock != nil && moveBlock) {
 			self.selectedBlock.modelMatrix = [self getDefaultPositionMatrix];
 		}
-	} DidStopBlock:stopBlock];
+	} DidStopBlock:^(NezAnimation *ani) {
+		self.acceptsInput = YES;
+		if (stopBlock) {
+			stopBlock(ani);
+		}
+	}];
 	[NezAnimator addAnimation:ani];
 }
 
 -(void)animateCameraToJunkWithDuration:(float)duration andStopBlock:(NezAnimationBlock)stopBlock {
+	self.acceptsInput = NO;
 	GLKVector3 fromData[] = {
 		_camera.eye, _camera.target, _camera.upVector
 	};
@@ -149,17 +160,34 @@ typedef enum NezAletterationCameraPositionEnum {
 		[self getCameraDefaultEye], [self getCameraDefaultTarget], [self getCameraDefaultUpVector]
 	};
 	float unitsPerPixel = [self getUnitsPerPixel];
-	toData[0].x += unitsPerPixel*_camera.viewport.size.width;
+	float screenWidth = unitsPerPixel*_camera.viewport.size.width;
+	
+	float leftX = -screenWidth;
+	
+	NSArray *displayLineList = [NezAletterationGameState getDisplayLineList];
+	for (NezAletterationDisplayLine *displayLine in displayLineList) {
+		if (displayLine.leftEdge < leftX) {
+			leftX = displayLine.leftEdge-(unitsPerPixel*5.0);
+		}
+	}
+	
+	toData[0].x += leftX+screenWidth/2.0;
 	toData[1].x = toData[0].x;
 	_cameraPosition = NezAletterationCameraPositionJunk;
 	NezAnimation *ani = [[NezAnimation alloc] initWithFromData:(float*)fromData ToData:(float*)toData DataLength:sizeof(GLKVector3)*3 Duration:duration EasingFunction:easeOutCubic UpdateBlock:^(NezAnimation *ani) {
 		float *data = ani->newData;
 		[_camera setEye:GLKVector3Make(data[0], data[1], data[2]) Target:GLKVector3Make(data[3], data[4], data[5]) UpVector:GLKVector3Make(data[6], data[7], data[8])];
-	} DidStopBlock:stopBlock];
+	} DidStopBlock:^(NezAnimation *ani) {
+		self.acceptsInput = YES;
+		if (stopBlock) {
+			stopBlock(ani);
+		}
+	}];
 	[NezAnimator addAnimation:ani];
 }
 
 -(void)animateCameraToScoreboardWithDuration:(float)duration andStopBlock:(NezAnimationBlock)stopBlock {
+	self.acceptsInput = NO;
 	NezAletterationScoreboard *scoreboard = [NezAletterationGameState getScoreboard];
 	GLKVector3 fromData[] = {
 		_camera.eye,
@@ -176,7 +204,12 @@ typedef enum NezAletterationCameraPositionEnum {
 	NezAnimation *ani = [[NezAnimation alloc] initWithFromData:(float*)fromData ToData:(float*)toData DataLength:sizeof(GLKVector3)*3 Duration:duration EasingFunction:easeOutCubic UpdateBlock:^(NezAnimation *ani) {
 		float *data = ani->newData;
 		[_camera setEye:GLKVector3Make(data[0], data[1], data[2]) Target:GLKVector3Make(data[3], data[4], data[5]) UpVector:GLKVector3Make(data[6], data[7], data[8])];
-	} DidStopBlock:stopBlock];
+	} DidStopBlock:^(NezAnimation *ani) {
+		self.acceptsInput = YES;
+		if (stopBlock) {
+			stopBlock(ani);
+		}
+	}];
 	[NezAnimator addAnimation:ani];
 }
 
@@ -255,7 +288,7 @@ typedef enum NezAletterationCameraPositionEnum {
 }
 
 -(IBAction)showScoringDialog:(id)sender {
-	[self showDialog:@"CommandsScoringDialogSegue"];
+//	[self showDialog:@"CommandsScoringDialogSegue"];
 }
 
 -(IBAction)doneAction:(id)sender {
@@ -323,7 +356,7 @@ typedef enum NezAletterationCameraPositionEnum {
 	return GLKMatrix4MakeTranslation(pos.x, pos.y, pos.z);
 }
 
--(void)startGame:(NezAletterationGameStateObject*)stateObject  {
+-(void)startGame:(NezAletterationGameStateObject*)stateObject {
 	[NezAletterationGameState startGame:stateObject];
 	[self performSelector:@selector(startNextTurn) withObject:nil afterDelay:0.25];
 }
@@ -370,7 +403,9 @@ typedef enum NezAletterationCameraPositionEnum {
 }
 
 -(void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
-	NSLog(@"touchesBegan");
+	if (!self.acceptsInput) {
+		return;
+	}
 	int tapCount;
 	GLKVector2 touchPos = [self getPositionForAnyTouch:touches TapCount:&tapCount];
 	NezRay *ray = [_camera getWorldRay:touchPos];
@@ -387,7 +422,9 @@ typedef enum NezAletterationCameraPositionEnum {
 }
 
 -(void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-	NSLog(@"touchesMoved");
+	if (!self.acceptsInput) {
+		return;
+	}
 	int tapCount;
 	GLKVector2 touchPos = [self getPositionForAnyTouch:touches TapCount:&tapCount];
 	NezRay *ray = [_camera getWorldRay:touchPos];
@@ -410,28 +447,36 @@ typedef enum NezAletterationCameraPositionEnum {
 }
 
 -(void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-	NSLog(@"touchesEnded");
-	if (self.blockOverLine) {
-		GLKVector3 linePos = [self.blockOverLine getNextLetterBlockPosition];
-		NezAnimation *ani = [[NezAnimation alloc] initVec3WithFromData:[self.selectedBlock getMidPoint] ToData:linePos Duration:0.25 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
-			GLKVector3 *midPoint = (GLKVector3*)ani->newData;
-			[self.selectedBlock setMidPoint:*midPoint];
-		} DidStopBlock:^(NezAnimation *ani) {
-			[self.blockOverLine animateDeselected];
-			[self endTurn];
-		}];
-		[NezAnimator addAnimation:ani];
-	} else {
-		if (_tapInsideSelectedBlock) {
-			[self animateSelectedBlockToDefaultPosition];
+	if (self.acceptsInput) {
+		self.acceptsInput = NO;
+		if (self.blockOverLine) {
+			GLKVector3 linePos = [self.blockOverLine getNextLetterBlockPosition];
+			NezAnimation *ani = [[NezAnimation alloc] initVec3WithFromData:[self.selectedBlock getMidPoint] ToData:linePos Duration:0.25 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
+				GLKVector3 *midPoint = (GLKVector3*)ani->newData;
+				[self.selectedBlock setMidPoint:*midPoint];
+			} DidStopBlock:^(NezAnimation *ani) {
+				[self.blockOverLine animateDeselected];
+				[self endTurn];
+			}];
+			[NezAnimator addAnimation:ani];
 		} else {
-			int tapCount = 0;
-			GLKVector2 touchPos = [self getPositionForAnyTouch:touches TapCount:&tapCount];
-			if (tapCount == 2) {
-				NezRay *ray = [_camera getWorldRay:touchPos];
-				NezAletterationDisplayLine *displayLine = [NezAletterationGameState getDisplayIntersectingRay:ray];
-				if (displayLine && displayLine.isWord) {
-					[NezAletterationGameState retireWordForDisplayLine:displayLine];
+			if (_tapInsideSelectedBlock) {
+				[self animateSelectedBlockToDefaultPosition];
+			} else {
+				int tapCount = 0;
+				GLKVector2 touchPos = [self getPositionForAnyTouch:touches TapCount:&tapCount];
+				if (tapCount == 2) {
+					NezRay *ray = [_camera getWorldRay:touchPos];
+					NezAletterationDisplayLine *displayLine = [NezAletterationGameState getDisplayIntersectingRay:ray];
+					if (displayLine && displayLine.isWord) {
+						[NezAletterationGameState retireWordForDisplayLine:displayLine withStopBlock:^() {
+							self.acceptsInput = YES;
+						}];
+					} else {
+						self.acceptsInput = YES;
+					}
+				} else {
+					self.acceptsInput = YES;
 				}
 			}
 		}
@@ -441,14 +486,64 @@ typedef enum NezAletterationCameraPositionEnum {
 }
 
 -(void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
+	self.acceptsInput = NO;
 	_tapInsideSelectedBlock = NO;
 	_tapCloseToSelectedBlock = NO;
-	if (self.blockOverLine) {
-		
-	} else {
-		[self animateSelectedBlockToDefaultPosition];
+	[self animateSelectedBlockToDefaultPosition];
+}
+
+//Do undo stuff later...
+/*
+-(BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+	[self becomeFirstResponder];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+	[self resignFirstResponder];
+    [super viewWillDisappear:animated];
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
+	if(!self.acceptsInput) {
+		return;
+	}
+    if (motion == UIEventSubtypeMotionShake) {
+        self.acceptsInput = NO;
+		[self undoTurn];
 	}
 }
+
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event {}
+
+-(void)undoTurn {
+	NezAletterationScoreboard *scoreboard = [NezAletterationGameState getScoreboard];
+	NezAletterationGameStateObject *stateObject = [NezAletterationGameState getCurrentGameStateObject];
+	if (stateObject.turn > 1) {
+		NezAletterationGameStateTurn *currentTurn = stateObject.turnStack.lastObject;
+		if (currentTurn) {
+			[stateObject.turnStack removeLastObject];
+			NezAletterationGameStateTurn *previousTurn = stateObject.turnStack.lastObject;
+			int wordCount = currentTurn.retiredWordList.count + previousTurn.retiredWordList.count;
+			NSMutableArray *retiredWordList = [[NSMutableArray alloc] initWithCapacity:wordCount];
+			for (int i=0; i<wordCount; i++) {
+				[retiredWordList addObject:[scoreboard removeLastRetiredWord]];
+			}
+			[NezAletterationAnimationUndo doAnimationFor:self withRetiredWordList:retiredWordList andStopBlock:^(NezAnimation *ani) {
+				self.acceptsInput = YES;
+			}];
+		} else {
+			self.acceptsInput = YES;
+		}
+	} else {
+		self.acceptsInput = YES;
+	}
+}
+*/
 
 -(void)endTurn {
 	[NezAletterationGameState endTurn:self.blockOverLine.lineIndex withBlock:^{
@@ -481,17 +576,20 @@ typedef enum NezAletterationCameraPositionEnum {
 -(float)getUnitsPerPixel {
 	GLKVector3 pZero = [_camera getWorldCoordinates:GLKVector2Make(0, 0) atWorldZ:_camera.target.z];
 	GLKVector3 pOne = [_camera getWorldCoordinates:GLKVector2Make(1, 0) atWorldZ:_camera.target.z];
-	return pZero.x-pOne.x;
+	return fabs(pOne.x-pZero.x);
 }
 
 -(void)dragBoard:(UIPanGestureRecognizer*)sender {
+	if (!self.acceptsInput) {
+		return;
+	}
 	if (_tapInsideSelectedBlock == NO && _tapCloseToSelectedBlock == NO) {
 		CGPoint translation = [sender translationInView:self.view];
 		if (sender.state == UIGestureRecognizerStateBegan) {
 			_eyeOnDrag = _camera.eye;
 		} else if (sender.state == UIGestureRecognizerStateChanged) {
 			float unitsPerPixel = [self getUnitsPerPixel];
-			GLKVector3 eye = {_eyeOnDrag.x+translation.x*unitsPerPixel, _eyeOnDrag.y, _eyeOnDrag.z};
+			GLKVector3 eye = {_eyeOnDrag.x-translation.x*unitsPerPixel, _eyeOnDrag.y, _eyeOnDrag.z};
 			GLKVector3 target = {eye.x, eye.y, _camera.target.z};
 			[_camera setEye:eye Target:target UpVector:_camera.upVector];
 		} else if (sender.state == UIGestureRecognizerStateEnded) {

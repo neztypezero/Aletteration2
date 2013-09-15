@@ -11,14 +11,26 @@
 
 @implementation NezFadeCustomSegue
 
+-(id)initWithIdentifier:(NSString *)identifier source:(UIViewController *)source destination:(UIViewController *)destination {
+    if (self = [super initWithIdentifier:identifier source:source destination:destination]){
+        self.isUnwinding = NO;
+    }
+    return self;
+}
+
 -(void)perform {
-    CATransition* transition = [CATransition animation];
+	CATransition* transition = [CATransition animation];
 	
-    transition.duration = 0.5;
-    transition.type = kCATransitionFade;
+	transition.duration = 0.5;
+	transition.type = kCATransitionFade;
 	
-    [[self.sourceViewController navigationController].view.layer addAnimation:transition forKey:kCATransition];
-    [[self.sourceViewController navigationController] pushViewController:[self destinationViewController] animated:NO];
+	if (self.isUnwinding) {
+		[[self.sourceViewController navigationController].view.layer addAnimation:transition forKey:kCATransition];
+        [[self.destinationViewController navigationController] popViewControllerAnimated:NO];
+	} else {
+		[[self.sourceViewController navigationController].view.layer addAnimation:transition forKey:kCATransition];
+		[[self.sourceViewController navigationController] pushViewController:[self destinationViewController] animated:NO];
+	}
 }
 
 @end

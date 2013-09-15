@@ -10,6 +10,8 @@
 #import "NezAletterationLetterBlock.h"
 #import "NezAppDelegate.h"
 #import "NezCamera.h"
+#import "NezAnimator.h"
+#import "NezAnimation.h"
 
 @implementation NezAletterationScoreboard
 
@@ -28,13 +30,18 @@
 	return self;
 }
 
--(void)addRetiredWord:(NezAletterationRetiredWord*)retiredWord isAnimated:(BOOL)animated {
-	GLKVector3 size = [NezAletterationLetterBlock getBlockSize];
-	GLKMatrix4 modelMatrix = GLKMatrix4MakeTranslation(_pos.x, _pos.y-(size.y+_lineSpace)*_retiredWordList.count, _pos.z);
-	retiredWord.modelMatrix = modelMatrix;
+
+-(void)recalculateBounds {
+	_wordBounds[0] = _pos;
+	_wordBounds[1] = _pos;
 	
+	for (NezAletterationRetiredWord *retiredWord in _retiredWordList) {
+		[self recalculateBoundsWithRetiredWord:retiredWord];
+	}
+}
+
+-(void)recalculateBoundsWithRetiredWord:(NezAletterationRetiredWord*)retiredWord {
 	for (NezAletterationLetterBlock *letterBlock in retiredWord.letterBlockList) {
-		[letterBlock setBoundingPoints];
 		if (_wordBounds[0].x > letterBlock.minX) {
 			_wordBounds[0].x = letterBlock.minX;
 		}
@@ -54,8 +61,43 @@
 			_wordBounds[1].z = letterBlock.maxZ;
 		}
 	}
+}
 
+-(NezAletterationRetiredWord*)removeLastRetiredWord {
+	NezAletterationRetiredWord *retiredWord = _retiredWordList.lastObject;
+	[_retiredWordList removeLastObject];
+	return retiredWord;
+}
+
+-(void)addRetiredWord:(NezAletterationRetiredWord*)retiredWord {
+	GLKVector3 size = [NezAletterationLetterBlock getBlockSize];
+	GLKMatrix4 modelMatrix = GLKMatrix4MakeTranslation(_pos.x, _pos.y-(size.y+_lineSpace)*_retiredWordList.count, _pos.z);
+	retiredWord.modelMatrix = modelMatrix;
 	[_retiredWordList addObject:retiredWord];
+	[self recalculateBoundsWithRetiredWord:retiredWord];
+}
+
+-(void)addRetiredWord:(NezAletterationRetiredWord*)retiredWord withStopBlock:(NezGCDBlock)stopBlock {
+	GLKVector3 size = [NezAletterationLetterBlock getBlockSize];
+	GLKMatrix4 matrix = retiredWord.modelMatrix;
+	GLKVector3 startPosition = GLKVector3Make(matrix.m30, matrix.m31, matrix.m32);
+	GLKVector3 endPosition = GLKVector3Make(_pos.x, _pos.y-(size.y+_lineSpace)*_retiredWordList.count, _pos.z);
+	
+	NezAnimation *ani = [[NezAnimation alloc] initVec3WithFromData:startPosition ToData:endPosition Duration:2.5 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
+		GLKVector3 *midPoint = (GLKVector3*)ani->newData;
+		GLKMatrix4 modelMatrix = matrix;
+		modelMatrix.m30 = midPoint->x;
+		modelMatrix.m31 = midPoint->y;
+		modelMatrix.m32 = midPoint->z;
+		retiredWord.modelMatrix = modelMatrix;
+	} DidStopBlock:^(NezAnimation *ani) {
+		[_retiredWordList addObject:retiredWord];
+		[self recalculateBoundsWithRetiredWord:retiredWord];
+		if (stopBlock) {
+			stopBlock();
+		}
+	}];
+	[NezAnimator addAnimation:ani];
 }
 
 -(GLKVector3)getCameraTarget {
@@ -86,6 +128,13 @@
 		}
 	}
 	return cam;
+}
+
+-(void)reset {
+	_wordBounds[0] = _pos;
+	_wordBounds[1] = _pos;
+	
+	[_retiredWordList removeAllObjects];
 }
 
 @end

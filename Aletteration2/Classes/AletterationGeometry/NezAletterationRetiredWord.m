@@ -11,24 +11,29 @@
 
 @implementation NezAletterationRetiredWord
 
-+(id)retiredWordWithLetterBlockList:(NSArray*)letterBlockList {
-	return [[NezAletterationRetiredWord alloc] initWithLetterBlockList:letterBlockList];
++(id)retiredWordWithLetterBlockList:(NSArray*)letterBlockList andLineIndex:(int)lineIndex {
+	return [[NezAletterationRetiredWord alloc] initWithLetterBlockList:letterBlockList andLineIndex:lineIndex];
 }
 
--(id)initWithLetterBlockList:(NSArray*)letterBlockList {
+-(id)initWithLetterBlockList:(NSArray*)letterBlockList andLineIndex:(int)lineIndex  {
 	if ((self = [super init])) {
 		_letterBlockList = [NSArray arrayWithArray:letterBlockList];
 		_string = @"";
 		for (NezAletterationLetterBlock *letterBlock in _letterBlockList) {
 			_string = [NSString stringWithFormat:@"%@%c", _string, letterBlock.letter];
 		}
-		_modelMatrix = GLKMatrix4Identity;
+		_lineIndex = lineIndex;
 	}
 	return self;
 }
 
 -(GLKMatrix4)getModelMaxtrix {
-	return _modelMatrix;
+	NezAletterationLetterBlock *letterBlock = _letterBlockList.firstObject;
+	if (letterBlock) {
+		return letterBlock.modelMatrix;
+	} else {
+		return GLKMatrix4Identity;
+	}
 }
 
 -(void)setModelMaxtrix:(GLKMatrix4)modelMatrix {

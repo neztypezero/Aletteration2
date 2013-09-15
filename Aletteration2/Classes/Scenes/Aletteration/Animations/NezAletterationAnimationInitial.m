@@ -15,10 +15,10 @@
 #import "NezCubicBezierAnimation.h"
 #import "NezCubicBezier.h"
 #import "NezAletterationLetterStack.h"
-#import "NezSinglePlayerAletterationController.h"
+#import "NezAletterationSinglePlayerController.h"
 #import "NezAletterationDisplayLine.h"
 
-const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
+#define NEZ_ALETTERATION_LID_ROTATION (M_PI/2.0*0.85)
 
 @implementation NezAletterationAnimationInitial
 
@@ -26,7 +26,7 @@ const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 	NezAletterationBox *box = [NezAletterationGameState getBox];
 	GLKVector3 boxSize = box.size;
 	GLKVector3 blockSize = [NezAletterationLetterBlock getBlockSize];
-	GLKVector3 endPos = {-boxSize.z, blockSize.y*8.0, 0.0};
+	GLKVector3 endPos = {-boxSize.z, blockSize.y*8.5, 0.0};
 	return endPos;
 }
 
@@ -42,7 +42,7 @@ const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 	return GLKMatrix4Multiply(matRotX, matRotZ);
 }
 
-+(void)doAnimationFor:(NezSinglePlayerAletterationController*)controller WithStopBlock:(NezAnimationBlock)stopBlock {
++(void)doAnimationFor:(NezAletterationSinglePlayerController*)controller WithStopBlock:(NezAnimationBlock)stopBlock {
 	NezCamera *camera = [NezAletterationGameState getCamera];
 	GLKVector3 fromData[] = {
 		camera.eye, camera.target, camera.upVector
@@ -72,7 +72,8 @@ const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 	NSArray *lineList = [NezAletterationGameState getDisplayLineList];
 	NezAletterationDisplayLine *displayLine = lineList.lastObject;
 	GLKVector4 color = displayLine.color1;
-	NezAnimation *ani = [[NezAnimation alloc] initFloatWithFromData:color.a ToData:0.5 Duration:1.0 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
+	float newAlpha = [NezAletterationDisplayLine defaultLineAlphaValue];
+	NezAnimation *ani = [[NezAnimation alloc] initFloatWithFromData:color.a ToData:newAlpha Duration:1.0 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
 		GLKVector4 c = color;
 		c.a = ani->newData[0];
 		for (NezAletterationDisplayLine *displayLine in lineList) {

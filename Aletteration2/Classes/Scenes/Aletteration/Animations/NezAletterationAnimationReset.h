@@ -8,11 +8,11 @@
 
 #import "NezAnimation.h"
 
-@class NezSinglePlayerAletterationController;
+@class NezAletterationSinglePlayerController;
 
 @interface NezAletterationAnimationReset : NSObject {
 }
 
-+(void)doAnimationFor:(NezSinglePlayerAletterationController*)controller WithStopBlock:(NezAnimationBlock)stopBlock;
++(void)doAnimationFor:(NezAletterationSinglePlayerController*)controller WithStopBlock:(NezAnimationBlock)stopBlock;
 
 @end

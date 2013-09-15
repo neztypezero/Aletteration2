@@ -293,7 +293,7 @@ static NezAletterationLetterCounter gLetterCounter;
 	gDisplayLineList = [[NSMutableArray alloc] initWithCapacity:NEZ_ALETTERATION_LINE_COUNT];
 	NezVertexArray *linesVertexArray = [[NezVertexArray alloc] initWithVertexIncrement:16 indexIncrement:16 TextureUnit:TEXTURE_LETTERS ProgramType:NEZ_SHADER_COLORED_ONE_MINUS_SRC_ALPHA];
 	GLKVector4 color = [NezAletterationGameState getBlockColor];
-	color.a = 0.5;
+	color.a = [NezAletterationDisplayLine defaultLineAlphaValue];
 	GLKVector3 size = [NezAletterationLetterBlock getBlockSize];
 	GLKMatrix4 sizeMatrix = GLKMatrix4MakeScale([NezAletterationGameState getLineWidth], size.y, 1.0f);
 	for (int lineIndex=0; lineIndex<NEZ_ALETTERATION_LINE_COUNT; lineIndex++) {
@@ -506,11 +506,21 @@ static NezAletterationLetterCounter gLetterCounter;
 
 #pragma mark -  Aletteration Game Functions
 
++(NezAletterationGameStateObject*)getCurrentGameStateObject {
+	return gAletterationPreferences.stateObject;
+}
+
 +(void)reset {
 	for (NezAletterationDisplayLine *displayLine in gDisplayLineList) {
 		[displayLine reset];
 	}
 	[gAletterationPreferences.stateObject reset];
+	[gScoredboard reset];
+
+	for (int i=0; i<26; i++) {
+		gLetterCounter.count[i] = [NezAletterationGameState getBlockCountForIndex:i];
+	}
+	gSelectedBlock = nil;
 }
 
 +(void)setFirstTurn {
@@ -529,7 +539,7 @@ static NezAletterationLetterCounter gLetterCounter;
 				displayLine.currentWordIndex = retiredWordState.range.location;
 				NSLog(@"%s", displayLine.currentWord);
 				NezAletterationRetiredWord *retiredWord = [displayLine retireHighlightedWord];
-				[gScoredboard addRetiredWord:retiredWord isAnimated:NO];
+				[gScoredboard addRetiredWord:retiredWord];
 			}
 			if (turn.lineIndex == -1) {
 				break;
@@ -610,6 +620,12 @@ static NezAletterationLetterCounter gLetterCounter;
 	}
 }
 
++(void)undoTurn {
+}
+
++(void)undoTurnWithDoneBlock:(NezGCDBlock)stopBlock {
+}
+
 +(NezAletterationLetterBlock*)startNextTurn:(BOOL)animated {
 	NezAletterationGameStateObject *stateObject = gAletterationPreferences.stateObject;
 	if ([NezAletterationGameState getTotalLetterCount] == stateObject.turnStack.count) {
@@ -634,7 +650,7 @@ static NezAletterationLetterCounter gLetterCounter;
 	return gSelectedBlock;
 }
 
-+(void)retireWordForDisplayLine:(NezAletterationDisplayLine*)displayLine {
++(void)retireWordForDisplayLine:(NezAletterationDisplayLine*)displayLine withStopBlock:(NezGCDBlock)stopBlock {
 	if (displayLine.isWord) {
 		NSRange wordRange = { displayLine.currentWordIndex, displayLine.currentWordLength };
 		NezAletterationRetiredWord *retiredWord = [displayLine retireHighlightedWord];
@@ -658,7 +674,7 @@ static NezAletterationLetterCounter gLetterCounter;
 			[NezAletterationGameState checkLine:displayLine];
 		} DoneBlock:^{
 			[displayLine setLetterBlockColors:YES];
-			[gScoredboard addRetiredWord:retiredWord isAnimated:YES];
+			[gScoredboard addRetiredWord:retiredWord withStopBlock:stopBlock];
 		}];
 		
 	}
@@ -691,7 +707,7 @@ static NezAletterationLetterCounter gLetterCounter;
 		lb.color1 = color;
 		[lb setUV:[lb getUV]];
 	}
-	color.a = 0.5;
+	color.a = [NezAletterationDisplayLine defaultLineAlphaValue];
 	for (NezAletterationDisplayLine *displayLine in gDisplayLineList) {
 		displayLine.color1 = color;
 	}

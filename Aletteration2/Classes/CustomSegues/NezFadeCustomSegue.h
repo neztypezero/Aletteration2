@@ -10,4 +10,6 @@
 
 @interface NezFadeCustomSegue : UIStoryboardSegue
 
+@property (nonatomic) BOOL isUnwinding;
+
 @end

@@ -123,4 +123,11 @@ GLKVector3 BLOCK_SIZE;
 	}
 }
 
+-(void)animateMix:(float)mix {
+	NezAnimation *ani = [[NezAnimation alloc] initFloatWithFromData:self.mix ToData:mix Duration:0.25 EasingFunction:easeInOutCubic UpdateBlock:^(NezAnimation *ani) {
+		self.mix = ani->newData[0];
+	} DidStopBlock:nil];
+	[NezAnimator addAnimation:ani];
+}
+
 @end

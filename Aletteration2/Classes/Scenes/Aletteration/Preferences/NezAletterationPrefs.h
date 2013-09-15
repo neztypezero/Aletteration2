@@ -50,6 +50,9 @@
 
 +(id)stateObject;
 
+-(void)copyLetterList:(char*)dstLetterList;
+-(void)useLetterList:(char*)srcLetterList;
+
 -(void)reset;
 -(void)endTurn:(int)lineIndex;
 -(void)pushNextTurn;

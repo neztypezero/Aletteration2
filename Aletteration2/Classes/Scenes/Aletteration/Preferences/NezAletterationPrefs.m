@@ -117,7 +117,7 @@
 }
 
 -(NSString*)description {
-	NSString *description = [NSString stringWithFormat:@"lineIndex:%d wordList:{}", self.lineIndex];
+	NSString *description = [NSString stringWithFormat:@"lineIndex:%d wordList:{%@}", self.lineIndex, self.retiredWordList];
 	return description;
 }
 
@@ -168,6 +168,24 @@
 	return (char*)self.letterData.bytes;
 }
 
+-(void)copyLetterList:(char*)dstLetterList {
+	char *letterList = (char*)self.letterData.bytes;
+	int n = n=[NezAletterationGameState getTotalLetterCount];
+	for (int i=0; i<n; i++) {
+		dstLetterList[i] = letterList[i];
+	}
+	dstLetterList[n] = '\0';
+}
+
+-(void)useLetterList:(char*)srcLetterList {
+	char *letterList = (char*)self.letterData.bytes;
+	int n = n=[NezAletterationGameState getTotalLetterCount];
+	for (int i=0; i<n; i++) {
+		letterList[i] = srcLetterList[i];
+	}
+	letterList[n] = '\0';
+}
+
 -(void)reset {
 	NSMutableArray *letterList = [NSMutableArray arrayWithCapacity:[NezAletterationGameState getTotalLetterCount]];
 	const int *letterBag = [NezAletterationGameState getLetterBag];
@@ -185,7 +203,6 @@
 		NSNumber *letter = [letterList objectAtIndex:randomIndex];
 		char currentLetter = [letter charValue];
 		if (previousLetter != currentLetter || sameCount > 25) {
-			printf("%c", currentLetter);
 			[letterList removeObjectAtIndex:randomIndex];
 			letterArray[index++] = [letter charValue];
 			previousLetter = currentLetter;
@@ -194,9 +211,13 @@
 			sameCount++;
 		}
 	}
-	printf("\n");
 	letterArray[index] = '\0';
 	[self.turnStack removeAllObjects];
+	
+	self.snapshot = nil;
+	for (NSMutableArray *stateStack in self.lineStateStackList) {
+		[stateStack removeAllObjects];
+	}
 }
 
 -(void)endTurn:(int)lineIndex {
@@ -206,7 +227,6 @@
 	}
 	NezAletterationWordState *wordState = [NezAletterationWordState wordState];
 	[self pushWordState:wordState forLineIndex:lineIndex];
-
 }
 
 -(NezAletterationGameStateTurn*)getCurrentTurn {

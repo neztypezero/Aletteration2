@@ -8,6 +8,7 @@
 
 #import <GLKit/GLKit.h>
 #import "NezAletterationRetiredWord.h"
+#import "NezGCD.h"
 
 @class NezCamera;
 
@@ -21,9 +22,15 @@
 +(id)scoreboardWithStartingPosition:(GLKVector3)pos andLineSpace:(float)lineSpace ;
 -(id)initWithStartingPosition:(GLKVector3)pos andLineSpace:(float)lineSpace ;
 
--(void)addRetiredWord:(NezAletterationRetiredWord*)retiredWord isAnimated:(BOOL)animated;
+-(void)addRetiredWord:(NezAletterationRetiredWord*)retiredWord;
+-(void)addRetiredWord:(NezAletterationRetiredWord*)retiredWord withStopBlock:(NezGCDBlock)stopBlock;
 
 -(NezCamera*)getCameraWithCurrentCamera:(NezCamera*)camera andDefaultZ:(float)z;
 -(GLKVector3)getCameraTarget;
+
+-(void)reset;
+
+-(NezAletterationRetiredWord*)removeLastRetiredWord;
+-(void)recalculateBounds;
 
 @end

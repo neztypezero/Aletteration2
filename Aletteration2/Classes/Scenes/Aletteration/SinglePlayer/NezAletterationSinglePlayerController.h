@@ -1,5 +1,5 @@
 //
-//  NezSinglePlayerAletterationController.h
+//  NezAletterationSinglePlayerController.h
 //  Aletteration2
 //
 //  Created by David Nesbitt on 2012-10-22.
@@ -13,8 +13,9 @@
 
 @class NezAletterationLetterBlock;
 @class NezAletterationDisplayLine;
+@class NezAletterationGameStateObject;
 
-@interface NezSinglePlayerAletterationController : NezCommandsController<UIGestureRecognizerDelegate> {
+@interface NezAletterationSinglePlayerController : UIViewController<UIGestureRecognizerDelegate> {
 }
 
 @property(nonatomic, weak) IBOutlet UIToolbar *pauseMenuToolbar;
@@ -23,7 +24,7 @@
 @property(nonatomic, weak) NezAletterationLetterBlock *selectedBlock;
 @property(nonatomic, weak) NezAletterationDisplayLine *blockOverLine;
 
-@property(nonatomic) int currentAnimatingCount;
+@property(nonatomic) BOOL acceptsInput;
 
 -(void)animateCameraToDefaultWithDuration:(float)duration moveSelectedBlock:(BOOL)moveBlock andStopBlock:(NezAnimationBlock)stopBlock;
 
@@ -34,5 +35,7 @@
 -(GLKVector3)getCameraDefaultEye;
 -(GLKVector3)getCameraDefaultTarget;
 -(GLKVector3)getCameraDefaultUpVector;
+
+-(void)startNextTurn;
 
 @end

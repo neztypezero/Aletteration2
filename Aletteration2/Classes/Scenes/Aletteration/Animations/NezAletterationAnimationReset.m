@@ -15,14 +15,12 @@
 #import "NezCubicBezierAnimation.h"
 #import "NezCubicBezier.h"
 #import "NezAletterationLetterStack.h"
-#import "NezSinglePlayerAletterationController.h"
+#import "NezAletterationSinglePlayerController.h"
 #import "NezAletterationDisplayLine.h"
-
-const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 
 @implementation NezAletterationAnimationReset
 
-+(void)doAnimationFor:(NezSinglePlayerAletterationController*)controller WithStopBlock:(NezAnimationBlock)stopBlock {
++(void)doAnimationFor:(NezAletterationSinglePlayerController*)controller WithStopBlock:(NezAnimationBlock)stopBlock {
 	[controller animateCameraToDefaultWithDuration:0.25 moveSelectedBlock:NO andStopBlock:^(NezAnimation *ani) {
 		[NezAletterationAnimationReset doAnimateCamera3QuarterView:^(NezAnimation *ani) {
 		}];
@@ -286,6 +284,12 @@ const float NEZ_ALETTERATION_LID_ROTATION = 1.1;
 		}
 	} DidStopBlock:stopBlock];
 	[NezAnimator addAnimation:ani];
+	
+	for (NezAletterationDisplayLine *displayLine in lineList) {
+		if (displayLine.isHighlighted) {
+			[displayLine fadeOutHighlight];
+		}
+	}
 }
 
 +(void)doAnimateBoxupWithStopBlock:(NezAnimationBlock)stopBlock {

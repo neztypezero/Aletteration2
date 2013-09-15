@@ -17,7 +17,7 @@ typedef enum LOOP_TYPES {
 
 @class NezAnimation;
 
-typedef void (^ NezAnimationBlock)(NezAnimation *ani);
+typedef void (^NezAnimationBlock)(NezAnimation *ani);
 
 @interface NezAnimation : NSObject {
 @public //This is for speed. Basically using this class as a struct

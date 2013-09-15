@@ -25,4 +25,6 @@
 @property (nonatomic) int lineIndex;
 @property (nonatomic) GLKMatrix4 lineMat;
 
+-(void)animateMix:(float)mix;
+
 @end

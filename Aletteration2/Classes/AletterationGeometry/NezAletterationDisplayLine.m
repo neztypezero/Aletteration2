@@ -13,13 +13,24 @@
 #import "NezAletterationGameState.h"
 #import "NezAletterationRetiredWord.h"
 
+const float HIGHLIGHTED = 0.0;
+const float UNHIGHLIGHTED = 1.0;
+
 @implementation NezAletterationDisplayLine
+
++(float)defaultLineAlphaValue {
+	return 0.5;
+}
+
++(float)touchOverLineAlphaValue {
+	return 0.9;
+}
 
 -(id)initWithVertexArray:(NezVertexArray*)vertexArray modelMatrix:(GLKMatrix4)mat color:(GLKVector4)c lineIndex:(int)lineIndex {
 	if ((self = [super initWithVertexArray:vertexArray modelMatrix:mat color:c])) {
 		_letterBlockList = [NSMutableArray arrayWithCapacity:16];
 		_lineIndex = lineIndex;
-		c.a = 0.9;
+		c.a = [NezAletterationDisplayLine touchOverLineAlphaValue];
 		self.color2 = c;
 		
 		int length = [NezAletterationGameState getTotalLetterCount]+1;
@@ -37,10 +48,14 @@
 	_currentWordIndex = 0;
 	_currentWordLength = 0;
 	_currentJunkLength = 0;
-	_isHighlighted = NO;
 	_junkOffset = 0;
 	
 	[_letterBlockList removeAllObjects];
+	
+	if (self.highlightRect) {
+		self.highlightRect.mix = UNHIGHLIGHTED;
+	}
+	_isHighlighted = NO;
 }
 
 -(GLKVector3)getNextLetterBlockPosition {
@@ -110,11 +125,19 @@
 		}
 		for (int i=0; i<_currentWordIndex; i++) {
 			NezAletterationLetterBlock *letterBlock = [_letterBlockList objectAtIndex:i];
-			letterBlock.mix = 1.0;
+			if (animated) {
+				[letterBlock animateMix:1.0];
+			} else {
+				letterBlock.mix = 1.0;
+			}
 		}
 		for (int i=_currentWordIndex; i<self.count; i++) {
 			NezAletterationLetterBlock *letterBlock = [_letterBlockList objectAtIndex:i];
-			letterBlock.mix = 0.0;
+			if (animated) {
+				[letterBlock animateMix:0.0];
+			} else {
+				letterBlock.mix = 0.0;
+			}
 		}
 	}
 	if (self.isWord) {
@@ -128,18 +151,18 @@
 		if (_isHighlighted == NO) {
 			_isHighlighted = YES;
 			if (animated) {
-				[self fadeHighlight:0.0];
+				[self fadeHighlight:HIGHLIGHTED];
 			} else {
-				self.highlightRect.mix = 0.0;
+				self.highlightRect.mix = HIGHLIGHTED;
 			}
 		}
 	} else {
 		if (_isHighlighted == YES) {
 			_isHighlighted = NO;
 			if (animated) {
-				[self fadeHighlight:1.0];
+				[self fadeHighlight:UNHIGHLIGHTED];
 			} else {
-				self.highlightRect.mix = 1.0;
+				self.highlightRect.mix = UNHIGHLIGHTED;
 			}
 		}
 	}
@@ -174,6 +197,14 @@
 	[NezAnimator addAnimation:ani];
 }
 
+-(void)fadeInHighlight {
+	[self fadeHighlight:HIGHLIGHTED];
+}
+
+-(void)fadeOutHighlight {
+	[self fadeHighlight:UNHIGHLIGHTED];
+}
+
 -(NezAletterationRetiredWord*)retireHighlightedWord {
 	NSRange wordRange = { _currentWordIndex, _currentWordLength };
 	NSArray *letterBlockList = [_letterBlockList subarrayWithRange:wordRange];
@@ -183,7 +214,15 @@
 	_currentWordLength = 0;
 	_isWord = NO;
 	
-	return [NezAletterationRetiredWord retiredWordWithLetterBlockList:letterBlockList];
+	return [NezAletterationRetiredWord retiredWordWithLetterBlockList:letterBlockList andLineIndex:_lineIndex];
+}
+
+-(float)getLeftEdge {
+	if (_letterBlockList.count > 0) {
+		NezAletterationLetterBlock *firstBlock = [_letterBlockList firstObject];
+		return firstBlock.minX;
+	}
+	return self.minX;
 }
 
 @end
